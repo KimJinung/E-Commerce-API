@@ -41,4 +41,17 @@ class OrderTest {
         );
     }
 
+    @Test
+    void testCompleteOrder() {
+        order.competeOrder();
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETE);
+    }
+
+    @Test
+    void testCancelOrder() {
+        order.cancelOrder();
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCEL);
+    }
 }

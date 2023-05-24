@@ -24,6 +24,8 @@ public class Order extends BaseEntity{
     @Column(name = "order_id", columnDefinition = "BINARY(16)")
     private UUID id;
 
+    private OrderStatus status;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "uuid")
     private Member member;
@@ -36,11 +38,20 @@ public class Order extends BaseEntity{
 
     public Order(Member member) {
         this.member = member;
+        this.status = OrderStatus.PENDING;
     }
 
     public void addOrder(Item item, int count) throws IllegalStateException{
         OrderLine orderLine = new OrderLine(this, item, count);
         this.orders.add(orderLine);
+    }
+
+    public void competeOrder() {
+        this.status = OrderStatus.COMPLETE;
+    }
+
+    public void cancelOrder() {
+        this.status = OrderStatus.CANCEL;
     }
 
 }
