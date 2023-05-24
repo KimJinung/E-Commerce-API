@@ -9,7 +9,6 @@ import java.util.UUID;
 public interface ItemRepository {
 
     UUID save(Item item);
-    Optional<Item> update(Item item);
     boolean remove(Item item);
     Optional<Item> findById(UUID uuid);
     Optional<List<Item>> findByName(String name);

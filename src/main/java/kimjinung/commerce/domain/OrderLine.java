@@ -15,7 +15,7 @@ public class OrderLine {
             name = "uuid",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "order_line_id", columnDefinition = "BINARY(16")
+    @Column(name = "order_line_id", columnDefinition = "BINARY(16)")
     private UUID id;
 
     @ManyToOne
