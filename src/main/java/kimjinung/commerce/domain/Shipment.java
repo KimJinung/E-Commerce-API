@@ -31,7 +31,7 @@ public class Shipment {
     @Enumerated(EnumType.STRING)
     private ShipmentStatus status;
 
-    public Shipment() {
+    protected Shipment() {
     }
 
     public Shipment(Order order) {
