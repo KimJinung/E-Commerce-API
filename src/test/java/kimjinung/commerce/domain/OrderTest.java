@@ -1,6 +1,5 @@
 package kimjinung.commerce.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,9 +21,9 @@ class OrderTest {
     }
 
     @Test
-    void testAddOrder() {
-        order.addOrder(item, 1);
-        order.addOrder(item, 2);
+    void testAddItem() {
+        order.addItem(item, 1);
+        order.addItem(item, 2);
 
         assertThat(order.getOrders().size()).isEqualTo(2);
         order.getOrders()
@@ -37,21 +36,38 @@ class OrderTest {
     void testAddOrder_NotEnoughStockException() {
         assertThrows(
                 IllegalStateException.class,
-                () -> order.addOrder(item, 100)
+                () -> order.addItem(item, 100)
         );
     }
 
     @Test
     void testCompleteOrder() {
-        order.competeOrder();
+        order.completeOrder();
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETE);
+        assertThat(order.getShipments().get(order.getShipments().size() - 1).getStatus())
+                .isEqualTo(ShipmentStatus.PENDING);
     }
 
     @Test
     void testCancelOrder() {
+        order.completeOrder();
         order.cancelOrder();
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCEL);
+        assertThat(order.getShipments().get(order.getShipments().size() - 1).getStatus())
+                .isEqualTo(ShipmentStatus.CANCEL);
     }
+
+    @Test
+    void testCancelOrder_IllegalStatueException() {
+        order.completeOrder();
+        Shipment lastShip = order.getShipments().get(order.getShipments().size() - 1);
+        lastShip.startShip();
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> order.cancelOrder());
+    }
+
 }

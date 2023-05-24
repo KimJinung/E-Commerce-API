@@ -1,7 +1,10 @@
 package kimjinung.commerce.domain;
 
 public enum OrderStatus {
-    PENDING,
+    PROCESSING,
     COMPLETE,
-    CANCEL
+    CANCEL,
+    EXCHANGE,
+    RETURN
+
 }

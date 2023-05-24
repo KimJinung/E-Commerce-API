@@ -38,7 +38,6 @@ public class OrderLine {
         this.item.reduceStock(count);
         this.count = count;
         this.totalPrice = item.getTotalPriceByCount(count);
-        
     }
 
 }
