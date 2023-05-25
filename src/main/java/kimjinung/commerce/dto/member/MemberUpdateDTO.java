@@ -1,15 +1,15 @@
-package kimjinung.commerce.dto;
+package kimjinung.commerce.dto.member;
 
 import lombok.Getter;
 
 @Getter
-public class MemberDTO {
-    private String userId;
+public class MemberUpdateDTO {
+    private String uuid;
+    private String id;
     private String password;
     private String phoneNumber;
     private String email;
     private String city;
     private String street;
-    private String zipCode;
-
+    private String zipcode;
 }

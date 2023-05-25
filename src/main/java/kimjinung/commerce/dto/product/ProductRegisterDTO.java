@@ -1,10 +1,9 @@
-package kimjinung.commerce.dto;
+package kimjinung.commerce.dto.product;
 
 import lombok.Getter;
 
 @Getter
-public class ItemDTO {
-    private String id;
+public class ProductRegisterDTO {
     private String name;
     private int price;
     private int stockQuantity;
