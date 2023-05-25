@@ -25,10 +25,10 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public boolean remove(Item item) {
         UUID uuid = item.getUuid();
+
         if (uuid == null) {
             return false;
-        }
-        if (findById(uuid).isEmpty()) {
+        } else if(findById(uuid).isEmpty()) {
             return false;
         }
         em.remove(item);
@@ -43,13 +43,11 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Optional<List<Item>> findByName(String name) {
-        TypedQuery<Item> JPQL = em.createQuery(
-                "select i from Item i where i.name = :name", Item.class
-        );
-        List<Item> items = JPQL
-                .setParameter("name", name)
-                .getResultList();
+        String jpql = "SELECT i FROM Item i WHERE i.name = :name";
+        TypedQuery<Item> query = em.createQuery(jpql, Item.class)
+                .setParameter("name", name);
 
-        return Optional.ofNullable(items);
+        List<Item> itemList = query.getResultList();
+        return Optional.ofNullable(itemList);
     }
 }
