@@ -1,7 +1,6 @@
 package kimjinung.commerce.repository.order;
 
-import kimjinung.commerce.domain.Member;
-import kimjinung.commerce.domain.Order;
+import kimjinung.commerce.domain.*;
 import kimjinung.commerce.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @Transactional
@@ -44,16 +42,29 @@ class OrderRepositoryImplTest {
     void testFindById() {
         UUID id = order.getId();
         Optional<Order> optionalOrder = repository.findById(id);
-        assertTrue(optionalOrder.isPresent());
+        assertThat(optionalOrder).isPresent();
+
+        Order foundOrder = optionalOrder.get();
+        assertThat(foundOrder.getMember()).isEqualTo(member);
+        assertThat(foundOrder.getOrders().size()).isEqualTo(0);
+        assertThat(foundOrder.getStatus()).isEqualTo(OrderStatus.COMPLETE);
+        assertThat(foundOrder.getShipments().size()).isEqualTo(1);
+
+        Optional<Shipment> optionalShipment = foundOrder.getShipments().stream().findFirst();
+        assertThat(optionalShipment).isPresent();
+
+        Shipment shipment = optionalShipment.get();
+        assertThat(shipment.getOrder()).isEqualTo(order);
+        assertThat(shipment.getStatus()).isEqualTo(ShipmentStatus.PENDING);
     }
 
     @Test
     void testFindByMember() {
         Optional<List<Order>> optionalOrders = repository.findByMember(member);
-        assertTrue(optionalOrders.isPresent());
-        List<Order> foundOrderList = optionalOrders.get();
+        assertThat(optionalOrders).isPresent();
 
-        assertFalse(foundOrderList.isEmpty());
+        List<Order> foundOrderList = optionalOrders.get();
+        assertThat(foundOrderList).isNotEmpty();
         assertThat(foundOrderList.size()).isEqualTo(1);
     }
 
@@ -63,10 +74,10 @@ class OrderRepositoryImplTest {
         memberRepository.save(dummyMember);
 
         Optional<List<Order>> optionalOrders = repository.findByMember(dummyMember);
-        assertTrue(optionalOrders.isPresent());
+        assertThat(optionalOrders).isPresent();
 
         List<Order> orders = optionalOrders.get();
-        assertTrue(orders.isEmpty());
+        assertThat(orders).isEmpty();
     }
 
 }
