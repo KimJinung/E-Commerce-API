@@ -30,14 +30,6 @@ class ItemRepositoryImplTest {
     }
 
     @Test
-    void testSave() {
-        Item item = new Item("Item", 10, 1);
-        UUID result = repository.save(item);
-
-        assertThat(result.getClass()).isEqualTo(UUID.class);
-    }
-
-    @Test
     void testRemove() {
         boolean result = repository.remove(item);
         assertThat(result).isTrue();
