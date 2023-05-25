@@ -24,19 +24,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public void update(Member member) throws IllegalArgumentException {
-        UUID uuid = member.getUuid();
-        Member foundMember = findByUUID(uuid).orElseThrow(
-                () -> new IllegalArgumentException("Not exist member")
-        );
-
-        foundMember.changePassword(member.getPassword());
-        foundMember.changeAddress(member.getAddress());
-        foundMember.changeEmail(member.getEmail());
-        foundMember.changePhoneNumber(member.getEmail());
-    }
-
-    @Override
     public boolean remove(Member member) {
         if (member.getUuid() == null) {
             return false;

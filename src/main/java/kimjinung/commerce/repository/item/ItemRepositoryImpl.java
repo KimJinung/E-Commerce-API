@@ -35,17 +35,6 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public void update(Item item) throws IllegalArgumentException{
-        UUID uuid = item.getUuid();
-        Item foundItem = findById(uuid).orElseThrow(
-                () -> new IllegalArgumentException("Not exist item")
-        );
-
-        foundItem.changeName(item.getName());
-        foundItem.changePrice(item.getPrice());
-    }
-
-    @Override
     public Optional<Item> findById(UUID uuid) {
         Item item = em.find(Item.class, uuid);
         return Optional.ofNullable(item);
