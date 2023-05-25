@@ -62,36 +62,42 @@ class ItemRepositoryImplTest {
 
     @Test
     void testFindById() {
-        Item item = repository.findById(uuid).orElse(null);
+        Optional<Item> optionalItem = repository.findById(uuid);
+        assertThat(optionalItem).isPresent();
 
-        assertThat(item).isNotNull();
+        Item foundItem = optionalItem.get();
+        assertThat(foundItem.getName()).isEqualTo(itemName);
+        assertThat(foundItem.getPrice()).isEqualTo(1000000);
+        assertThat(foundItem.getStockQuantity()).isEqualTo(10);
     }
 
     @Test
     void testFindById_NotExist() {
         UUID randomUUID = UUID.randomUUID();
-        Item result = repository.findById(randomUUID).orElse(null);
-
-        assertThat(result).isNull();
+        Optional<Item> optionalItem = repository.findById(randomUUID);
+        assertThat(optionalItem).isNotPresent();
     }
 
     @Test
     void testFindByName() {
-        List<Item> items = repository.findByName(itemName).orElse(null);
+        Optional<List<Item>> optionalItems = repository.findByName(itemName);
+        assertThat(optionalItems).isPresent();
 
-        assertThat(items).isNotEmpty();
-        assertThat(items.size()).isEqualTo(1);
-        items.forEach(i -> {
+        List<Item> foundItems = optionalItems.get();
+        assertThat(foundItems).isNotEmpty();
+        assertThat(foundItems.size()).isEqualTo(1);
+        foundItems.forEach(i -> {
             assertThat(i.getName()).isEqualTo(itemName);
         });
     }
 
     @Test
     void testFindByName_NotExist() {
-        List<Item> items = repository.findByName("Dummy").orElse(null);
-        System.out.println("items = " + items);
+        Optional<List<Item>> optionalItems = repository.findByName("Dummy");
+        assertThat(optionalItems).isPresent();
 
-        assertThat(items).isEmpty();
+        List<Item> foundItems = optionalItems.get();
+        assertThat(foundItems).isEmpty();
     }
 
 }
