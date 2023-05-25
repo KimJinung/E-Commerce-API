@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 @Transactional
@@ -34,21 +33,21 @@ class MemberRepositoryImplTest {
     @Test
     void testRemoveMember() {
         boolean result = repository.remove(member);
-        assertTrue(result);
+        assertThat(result).isTrue();
     }
 
     @Test
     void testRemoveMember_NotExistMember() {
         Member dummy = new Member(null, null, null, null, null);
         boolean result = repository.remove(dummy);
-        assertFalse(result);
+        assertThat(result).isFalse();
     }
 
     @Test
     void testFindByUUID() {
         UUID uuid = member.getUuid();
         Optional<Member> optionalMember = repository.findByUUID(uuid);
-        assertTrue(optionalMember.isPresent());
+        assertThat(optionalMember).isPresent();
 
         Member foundMember = optionalMember.get();
         assertThat(foundMember.getUserId()).isEqualTo(member.getUserId());
@@ -61,14 +60,14 @@ class MemberRepositoryImplTest {
     void testFindByUUID_NotExistMember() {
         UUID uuid = UUID.randomUUID();
         Optional<Member> optionalMember = repository.findByUUID(uuid);
-        assertFalse(optionalMember.isPresent());
+        assertThat(optionalMember).isEmpty();
     }
 
     @Test
     void testFindByUserId() {
         String userId = member.getUserId();
         Optional<Member> optionalMember = repository.findByUserId(userId);
-        assertTrue(optionalMember.isPresent());
+        assertThat(optionalMember).isPresent();
 
         Member foundMember = optionalMember.get();
         assertThat(foundMember.getUuid()).isEqualTo(member.getUuid());
@@ -81,6 +80,6 @@ class MemberRepositoryImplTest {
     void testFindByUserId_NotExistMember() {
         String dummyUserId = "foo";
         Optional<Member> optionalMember = repository.findByUserId(dummyUserId);
-        assertFalse(optionalMember.isPresent());
+        assertThat(optionalMember).isEmpty();
     }
 }
