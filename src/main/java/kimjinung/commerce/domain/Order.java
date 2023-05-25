@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static kimjinung.commerce.domain.OrderStatus.*;
 
@@ -35,7 +36,7 @@ public class Order extends BaseEntity{
     @OneToMany(mappedBy = "order")
     private final List<OrderLine> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = PERSIST)
     private final List<Shipment> shipments = new ArrayList<>();
 
     protected Order() {

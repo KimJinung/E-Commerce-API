@@ -56,4 +56,5 @@ public class Member extends BaseEntity{
     public void changeAddress(Address newAddress) {
         this.address = newAddress;
     }
+
 }

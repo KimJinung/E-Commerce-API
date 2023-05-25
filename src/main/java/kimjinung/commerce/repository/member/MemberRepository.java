@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface MemberRepository {
 
     UUID save(Member member);
-    Optional<Member> update(Member member);
+    void update(Member member);
     boolean remove(Member member);
     Optional<Member> findByUUID(UUID uuid);
     Optional<Member> findByUserId(String userId);

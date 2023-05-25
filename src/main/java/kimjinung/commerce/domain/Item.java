@@ -51,4 +51,11 @@ public class Item {
     public Integer getTotalPriceByCount(int count) {
         return this.price * count;
     }
+
+    public void changeName(String name) {
+        this.name = name;
+    }
+    public void changePrice(int price) {
+        this.price = price;
+    }
 }

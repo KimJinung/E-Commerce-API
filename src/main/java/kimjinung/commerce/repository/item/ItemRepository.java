@@ -10,6 +10,8 @@ public interface ItemRepository {
 
     UUID save(Item item);
     boolean remove(Item item);
+
+    void update(Item item);
     Optional<Item> findById(UUID uuid);
     Optional<List<Item>> findByName(String name);
 }

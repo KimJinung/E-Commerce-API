@@ -13,7 +13,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
-
     private final EntityManager em;
 
     @Override
@@ -33,6 +32,17 @@ public class ItemRepositoryImpl implements ItemRepository {
         }
         em.remove(item);
         return true;
+    }
+
+    @Override
+    public void update(Item item) throws IllegalArgumentException{
+        UUID uuid = item.getUuid();
+        Item foundItem = findById(uuid).orElseThrow(
+                () -> new IllegalArgumentException("Not exist item")
+        );
+
+        foundItem.changeName(item.getName());
+        foundItem.changePrice(item.getPrice());
     }
 
     @Override
