@@ -1,8 +1,7 @@
-package kimjinung.commerce.repository.member;
+package kimjinung.commerce.Infrastructure.repository.member;
 
 import kimjinung.commerce.domain.Member;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 

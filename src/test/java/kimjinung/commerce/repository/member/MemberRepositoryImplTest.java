@@ -1,5 +1,6 @@
 package kimjinung.commerce.repository.member;
 
+import kimjinung.commerce.Infrastructure.repository.member.MemberRepository;
 import kimjinung.commerce.domain.Address;
 import kimjinung.commerce.domain.Member;
 import org.junit.jupiter.api.BeforeEach;

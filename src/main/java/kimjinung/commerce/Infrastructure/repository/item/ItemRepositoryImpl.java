@@ -1,4 +1,4 @@
-package kimjinung.commerce.repository.item;
+package kimjinung.commerce.Infrastructure.repository.item;
 
 import kimjinung.commerce.domain.Item;
 import lombok.RequiredArgsConstructor;

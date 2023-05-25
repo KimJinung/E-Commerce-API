@@ -1,5 +1,6 @@
 package kimjinung.commerce.repository.item;
 
+import kimjinung.commerce.Infrastructure.repository.item.ItemRepository;
 import kimjinung.commerce.domain.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,9 +78,7 @@ class ItemRepositoryImplTest {
         List<Item> foundItems = optionalItems.get();
         assertThat(foundItems).isNotEmpty();
         assertThat(foundItems.size()).isEqualTo(1);
-        foundItems.forEach(i -> {
-            assertThat(i.getName()).isEqualTo(itemName);
-        });
+        foundItems.forEach(i -> assertThat(i.getName()).isEqualTo(itemName));
     }
 
     @Test

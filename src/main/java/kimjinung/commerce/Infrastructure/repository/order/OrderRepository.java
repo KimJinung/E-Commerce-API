@@ -1,4 +1,4 @@
-package kimjinung.commerce.repository.order;
+package kimjinung.commerce.Infrastructure.repository.order;
 
 import kimjinung.commerce.domain.Member;
 import kimjinung.commerce.domain.Order;

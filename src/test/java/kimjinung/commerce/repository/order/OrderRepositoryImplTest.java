@@ -1,7 +1,8 @@
 package kimjinung.commerce.repository.order;
 
+import kimjinung.commerce.Infrastructure.repository.order.OrderRepository;
 import kimjinung.commerce.domain.*;
-import kimjinung.commerce.repository.member.MemberRepository;
+import kimjinung.commerce.Infrastructure.repository.member.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
