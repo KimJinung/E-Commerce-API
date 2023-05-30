@@ -6,6 +6,7 @@ import lombok.Getter;
 public class SearchMemberResultDto {
     private String userId;
     private String password;
+    private String errorMsg;
 
 
     public SearchMemberResultDto() {
@@ -16,5 +17,9 @@ public class SearchMemberResultDto {
             String password) {
         this.userId = userId;
         this.password = password;
+    }
+
+    public SearchMemberResultDto(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

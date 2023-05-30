@@ -3,6 +3,8 @@ package kimjinung.commerce.controller.api;
 import kimjinung.commerce.dto.member.*;
 import kimjinung.commerce.usecase.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -14,23 +16,44 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public JoinMemberResultDto join(@RequestBody JoinMemberDto joinMemberDto) {
-        return memberService.join(joinMemberDto);
+    public ResponseEntity<JoinMemberResultDto> join(@RequestBody JoinMemberDto joinMemberDto) {
+        try {
+            return ResponseEntity.ok(memberService.join(joinMemberDto));
+        } catch (IllegalStateException ex) {
+            JoinMemberResultDto errorResult = new JoinMemberResultDto(null, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResult);
+        }
+
     }
 
     @PostMapping("/search")
-    public SearchMemberResultDto search(@RequestBody SearchMemberDto searchMemberDto) {
-        return memberService.search(searchMemberDto);
+    public ResponseEntity<SearchMemberResultDto> search(@RequestBody SearchMemberDto searchMemberDto) {
+        try {
+            return ResponseEntity.ok(memberService.search(searchMemberDto));
+        } catch (IllegalStateException ex) {
+            SearchMemberResultDto errorResult = new SearchMemberResultDto(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResult);
+        }
     }
 
     @PostMapping("/update")
-    public UpdateMemberResultDto update(@RequestBody UpdateMemberDto updateMemberDto) {
-        return memberService.update(updateMemberDto);
+    public ResponseEntity<UpdateMemberResultDto> update(@RequestBody UpdateMemberDto updateMemberDto) {
+        try {
+            return ResponseEntity.ok(memberService.update(updateMemberDto));
+        } catch (IllegalStateException ex){
+            UpdateMemberResultDto result = new UpdateMemberResultDto(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
     }
 
     @PostMapping("/withdrawal")
-    public boolean withdrawal(@RequestBody WithdrawalMemberDto withdrawalMemberDto) {
-        System.out.println("withdrawalMemberDto = " + withdrawalMemberDto);
-        return memberService.withdrawal(withdrawalMemberDto);
+    public ResponseEntity<WithdrawalMemberResultDto> withdrawal(@RequestBody WithdrawalMemberDto withdrawalMemberDto) {
+        try {
+            boolean result = memberService.withdrawal(withdrawalMemberDto);
+            return ResponseEntity.ok(new WithdrawalMemberResultDto(result));
+        } catch (IllegalStateException ex) {
+            WithdrawalMemberResultDto errorResult = new WithdrawalMemberResultDto(false, ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResult);
+        }
     }
 }
