@@ -11,5 +11,6 @@ public interface MemberRepository {
     boolean remove(Member member);
     Optional<Member> findByUUID(UUID uuid);
     Optional<Member> findByUserId(String userId);
+    Optional<Member> findByEmail(String email);
 }
 

@@ -83,4 +83,24 @@ class MemberRepositoryImplTest {
         Optional<Member> optionalMember = repository.findByUserId(dummyUserId);
         assertThat(optionalMember).isEmpty();
     }
+
+    @Test
+    void testFindByEmail() {
+        String email = member.getEmail();
+
+        Optional<Member> optionalMember = repository.findByEmail(email);
+        assertThat(optionalMember).isPresent();
+
+        Member foundMember = optionalMember.get();
+        assertThat(foundMember.getUuid()).isEqualTo(member.getUuid());
+        assertThat(foundMember.getAddress()).isEqualTo(member.getAddress());
+        assertThat(foundMember.getPassword()).isEqualTo(member.getPassword());
+        assertThat(foundMember.getPhoneNumber()).isEqualTo(member.getPhoneNumber());
+    }
+
+    @Test
+    void testFindByEmail_NotFound() {
+        Optional<Member> optionalMember = repository.findByEmail("foo");
+        assertThat(optionalMember).isEmpty();
+    }
 }

@@ -48,4 +48,14 @@ public class MemberRepositoryImpl implements MemberRepository {
 
         return query.getResultList().stream().findFirst();
     }
+
+    @Override
+    public Optional<Member> findByEmail(String email) {
+        String jpql = "SELECT m FROM Member m WHERE m.email = :email";
+        TypedQuery<Member> query = em.createQuery(jpql, Member.class)
+                .setParameter("email", email)
+                .setMaxResults(1);
+
+        return query.getResultList().stream().findFirst();
+    }
 }
