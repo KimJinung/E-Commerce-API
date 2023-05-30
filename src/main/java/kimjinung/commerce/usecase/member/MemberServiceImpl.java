@@ -118,14 +118,4 @@ public class MemberServiceImpl implements MemberService {
         Member member = optionalMember.get();
         return repository.remove(member);
     }
-
-//    private UUID searchUUID(String userId) {
-//        Optional<Member> optionalMember = repository.findByUserId(userId);
-//        if (optionalMember.isEmpty()) {
-//            return null;
-//        }
-//
-//        Member member = optionalMember.get();
-//        return member.getUuid();
-//    }
 }
