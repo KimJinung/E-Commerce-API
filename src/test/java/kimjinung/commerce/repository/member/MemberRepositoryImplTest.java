@@ -3,6 +3,7 @@ package kimjinung.commerce.repository.member;
 import kimjinung.commerce.Infrastructure.repository.member.MemberRepository;
 import kimjinung.commerce.domain.Address;
 import kimjinung.commerce.domain.Member;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,19 +21,19 @@ import static org.assertj.core.api.Assertions.*;
 class MemberRepositoryImplTest {
 
     Member member;
-
+    Address address;
     @Autowired
     MemberRepository repository;
 
     @BeforeEach
-    void beforeEach() {
-        Address address = new Address("City", "Street", "1234");
+    void before() {
+        address = new Address("City", "Street", "1234");
         member = new Member("Jinung", "0410", "010", "outlook", address);
         repository.save(member);
     }
 
-    @Test
-    void testRemoveMember() {
+    @AfterEach
+    void after() {
         boolean result = repository.remove(member);
         assertThat(result).isTrue();
     }

@@ -5,5 +5,9 @@ import lombok.Getter;
 
 @Getter
 public class WithdrawalMemberDto {
-    private String email;
+    private String userId;
+
+    public WithdrawalMemberDto(String userId) {
+        this.userId = userId;
+    }
 }
