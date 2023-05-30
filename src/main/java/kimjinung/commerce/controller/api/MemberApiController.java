@@ -19,7 +19,7 @@ public class MemberApiController {
     public ResponseEntity<JoinMemberResultDto> join(@RequestBody JoinMemberDto joinMemberDto) {
         try {
             return ResponseEntity.ok(memberService.join(joinMemberDto));
-        } catch (IllegalStateException ex) {
+        } catch (RuntimeException ex) {
             JoinMemberResultDto errorResult = new JoinMemberResultDto(null, ex.getMessage());
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResult);
         }
@@ -30,7 +30,7 @@ public class MemberApiController {
     public ResponseEntity<SearchMemberResultDto> search(@RequestBody SearchMemberDto searchMemberDto) {
         try {
             return ResponseEntity.ok(memberService.search(searchMemberDto));
-        } catch (IllegalStateException ex) {
+        } catch (RuntimeException ex) {
             SearchMemberResultDto errorResult = new SearchMemberResultDto(ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResult);
         }
@@ -40,7 +40,7 @@ public class MemberApiController {
     public ResponseEntity<UpdateMemberResultDto> update(@RequestBody UpdateMemberDto updateMemberDto) {
         try {
             return ResponseEntity.ok(memberService.update(updateMemberDto));
-        } catch (IllegalStateException ex){
+        } catch (RuntimeException ex){
             UpdateMemberResultDto result = new UpdateMemberResultDto(ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
         }
@@ -51,7 +51,7 @@ public class MemberApiController {
         try {
             boolean result = memberService.withdrawal(withdrawalMemberDto);
             return ResponseEntity.ok(new WithdrawalMemberResultDto(result));
-        } catch (IllegalStateException ex) {
+        } catch (RuntimeException ex) {
             WithdrawalMemberResultDto errorResult = new WithdrawalMemberResultDto(false, ex.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResult);
         }

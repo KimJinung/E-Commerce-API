@@ -4,6 +4,10 @@ import kimjinung.commerce.Infrastructure.repository.member.MemberRepository;
 import kimjinung.commerce.domain.Address;
 import kimjinung.commerce.domain.Member;
 import kimjinung.commerce.dto.member.*;
+import kimjinung.commerce.exception.MemberAlreadyExistException;
+import kimjinung.commerce.exception.MemberJoinFailException;
+import kimjinung.commerce.exception.MemberNotFoundException;
+import kimjinung.commerce.exception.MemberInfoNotMatchException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +23,10 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository repository;
 
     @Override
-    public JoinMemberResultDto join(JoinMemberDto joinMemberDto) throws IllegalStateException{
+    public JoinMemberResultDto join(JoinMemberDto joinMemberDto) throws RuntimeException{
         Optional<Member> optionalMember = repository.findByUserId(joinMemberDto.getUserId());
         if (optionalMember.isPresent()) {
-            throw new IllegalStateException("Already exist userId");
+            throw new MemberAlreadyExistException();
         }
 
         String userId = joinMemberDto.getUserId();
@@ -37,12 +41,12 @@ public class MemberServiceImpl implements MemberService {
 
         UUID result = repository.save(member);
         if (result == null) {
-            throw new IllegalStateException("Fail to join");
+            throw new MemberJoinFailException();
         }
 
         Optional<Member> byUserId = repository.findByUserId(userId);
         if (byUserId.isEmpty()) {
-            throw new IllegalStateException("Fail to join");
+            throw new MemberNotFoundException();
         }
         Member savedMember = byUserId.get();
 
@@ -57,12 +61,12 @@ public class MemberServiceImpl implements MemberService {
 
         Optional<Member> optionalMember = repository.findByUserId(userId);
         if (optionalMember.isEmpty()) {
-            throw new IllegalStateException("Not found member");
+            throw new MemberNotFoundException();
         }
         Member foundMember = optionalMember.get();
 
         if (!userId.equals(foundMember.getUserId())) {
-            throw new IllegalStateException("Not match user id and email");
+            throw new MemberInfoNotMatchException();
         }
 
         return new SearchMemberResultDto(
@@ -75,7 +79,7 @@ public class MemberServiceImpl implements MemberService {
     public UpdateMemberResultDto update(UpdateMemberDto updateMemberDto) throws IllegalStateException{
         Optional<Member> optionalMember = repository.findByUserId(updateMemberDto.getUserId());
         if (optionalMember.isEmpty()) {
-            throw new IllegalStateException("Not found member");
+            throw new MemberNotFoundException();
         }
         Member member = optionalMember.get();
 
@@ -94,7 +98,7 @@ public class MemberServiceImpl implements MemberService {
 
         Optional<Member> optionalUpdatedMember = repository.findByUserId(member.getUserId());
         if (optionalUpdatedMember.isEmpty()) {
-            throw new IllegalStateException("Not found member");
+            throw new MemberNotFoundException();
         }
         Member updatedMember = optionalUpdatedMember.get();
 
@@ -113,7 +117,7 @@ public class MemberServiceImpl implements MemberService {
         String userId = withdrawalMemberDto.getUserId();
         Optional<Member> optionalMember = repository.findByUserId(userId);
         if (optionalMember.isEmpty()) {
-            throw new IllegalStateException("Not exist member");
+            throw new MemberNotFoundException();
         }
         Member member = optionalMember.get();
         return repository.remove(member);
