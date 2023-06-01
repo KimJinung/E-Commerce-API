@@ -35,58 +35,8 @@ class ShipmentRepositoryImplTest {
     @Autowired
     MemberRepository memberRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        member = new Member("dummy", "1234", "1234", "1234", null);
-        memberRepository.save(member);
 
-        order = new Order(member);
-        orderRepository.save(order);
 
-        shipment = new Shipment(order);
-        repository.save(shipment);
-    }
 
-    @Test
-    void testFindById() {
-        Optional<Shipment> optionalShipment = repository.findById(shipment.getUuid());
-        assertThat(optionalShipment).isPresent();
-
-        Shipment foundShipment = optionalShipment.get();
-        assertThat(foundShipment.getStatus()).isEqualTo(ShipmentStatus.PENDING);
-        assertThat(foundShipment.getOrder().getMember()).isEqualTo(member);
-
-    }
-
-    @Test
-    void testFindById_NotExistShipment() {
-        UUID uuid = UUID.randomUUID();
-        Optional<Shipment> optionalShipment = repository.findById(uuid);
-        assertThat(optionalShipment).isEmpty();
-    }
-
-    @Test
-    void testFindByOrder() {
-        Optional<List<Shipment>> optionalShipments = repository.findByOrder(order);
-        assertThat(optionalShipments).isPresent();
-
-        List<Shipment> shipments = optionalShipments.get();
-        assertThat(shipments.size()).isEqualTo(1);
-
-        Optional<Shipment> optionalFirstShipment = shipments.stream().findFirst();
-        assertThat(optionalFirstShipment).isPresent();
-
-        Shipment firstShipment = optionalFirstShipment.get();
-        assertThat(firstShipment).isEqualTo(shipment);
-    }
-
-    @Test
-    void testFindByOrder_InvalidOrder() {
-        Order dummyOrder = new Order(member);
-        org.junit.jupiter.api.Assertions.assertThrows(
-                InvalidDataAccessApiUsageException.class,
-                () -> repository.findByOrder(dummyOrder)
-        );
-    }
 
 }

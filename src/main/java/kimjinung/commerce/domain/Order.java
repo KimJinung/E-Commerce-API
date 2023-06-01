@@ -54,12 +54,12 @@ public class Order extends BaseEntity {
         this.orders.add(orderLine);
     }
 
-    public void completeOrder() {
+    public void complete() {
         this.status = COMPLETE;
         this.shipments.add(new Shipment(this));
     }
 
-    public void cancelOrder() {
+    public void cancel() {
         Shipment lastShip = shipments.get(shipments.size() - 1);
 
         if (lastShip.getStatus() != ShipmentStatus.PENDING) {

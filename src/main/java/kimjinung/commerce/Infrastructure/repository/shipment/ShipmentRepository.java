@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface ShipmentRepository {
 
-    UUID save(Shipment shipment);
+    Optional<Shipment> save(Shipment shipment);
     Optional<Shipment> findById(UUID uuid);
-    Optional<List<Shipment>> findByOrder(Order order);
+
 }

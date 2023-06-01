@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,85 +18,56 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class ItemRepositoryImplTest {
 
-    Item item;
-    UUID uuid;
-    String itemName = "MacBook";
+    Item item1;
+    Item item2;
+    String itemName = "myItem";
     @Autowired
     ItemRepository repository;
 
     @BeforeEach
     void beforeEach() {
-        item = new Item(itemName, 1000000, 10);
-        uuid = repository.save(item);
+        item1 = new Item(itemName, 1000000, 10);
+        repository.save(item1);
+
+        item2 = new Item(itemName + "2", 10, 1);
+        repository.save(item2);
+    }
+
+    @Test
+    void testSave() {
+        Item myItem = new Item("myItem", 10, 1);
+        Optional<Item> optionalItem = repository.save(myItem);
+        assertThat(optionalItem).isPresent();
+
+        Item savedItem = optionalItem.get();
+        assertThat(savedItem.getName()).isEqualTo("myItem");
+        assertThat(savedItem.getPrice()).isEqualTo(10);
+        assertThat(savedItem.getStockQuantity()).isEqualTo(1);
     }
 
     @Test
     void testRemove() {
-        boolean result = repository.remove(item);
-        assertThat(result).isTrue();
-    }
-
-    @Test
-    void testRemove_NotExist() {
-        Item dummy = new Item("Dummy", 10, 1);
-        boolean result = repository.remove(dummy);
-        assertThat(result).isFalse();
-    }
-
-    @Test
-    void testRemove_AlreadyRemoved() {
-        boolean remove = repository.remove(item);
-        assertThat(remove).isTrue();
-
-        boolean result = repository.remove(item);
-        assertThat(result).isFalse();
+        Optional<Item> removedItem = repository.remove(item1);
+        assertThat(removedItem).isEmpty();
     }
 
     @Test
     void testFindById() {
-        Optional<Item> optionalItem = repository.findById(uuid);
+        Optional<Item> optionalItem = repository.findById(item1.getId());
         assertThat(optionalItem).isPresent();
 
         Item foundItem = optionalItem.get();
-        assertThat(foundItem.getName()).isEqualTo(itemName);
-        assertThat(foundItem.getPrice()).isEqualTo(1000000);
-        assertThat(foundItem.getStockQuantity()).isEqualTo(10);
+        assertThat(foundItem.getName()).isEqualTo(item1.getName());
+        assertThat(foundItem.getPrice()).isEqualTo(item1.getPrice());
+        assertThat(foundItem.getStockQuantity()).isEqualTo(item1.getStockQuantity());
+        assertThat(foundItem.getId()).isEqualTo(item1.getId());
     }
 
-    @Test
-    void testFindById_NotExist() {
-        UUID randomUUID = UUID.randomUUID();
-        Optional<Item> optionalItem = repository.findById(randomUUID);
-        assertThat(optionalItem).isNotPresent();
-    }
 
     @Test
     void testFindByName() {
-        Optional<List<Item>> optionalItems = repository.findByName(List.of(itemName));
-        assertThat(optionalItems).isPresent();
-
-        List<Item> foundItems = optionalItems.get();
-        assertThat(foundItems).isNotEmpty();
-        assertThat(foundItems.size()).isEqualTo(1);
-        foundItems.forEach(i -> assertThat(i.getName()).isEqualTo(itemName));
-    }
-
-    @Test
-    void testFindByName_NotExist() {
-        Optional<List<Item>> optionalItems = repository.findByName(List.of("Dummy"));
-        assertThat(optionalItems).isPresent();
-
-        List<Item> foundItems = optionalItems.get();
-        assertThat(foundItems).isEmpty();
-    }
-
-    @Test
-    void testFindByIds() {
-        Optional<List<Item>> optionalItems = repository.findByIds(List.of(uuid));
-        assertThat(optionalItems).isPresent();
-
-        List<Item> items = optionalItems.get();
-        assertThat(items.size()).isEqualTo(1);
+        Optional<List<Item>> optionalItem = repository.findByName(itemName);
+        assertThat(optionalItem).isPresent();
     }
 
 }

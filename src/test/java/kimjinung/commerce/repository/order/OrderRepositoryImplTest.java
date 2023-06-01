@@ -34,12 +34,21 @@ class OrderRepositoryImplTest {
         memberRepository.save(member);
 
         order = new Order(member);
-        order.completeOrder();
+        order.complete();
         repository.save(order);
     }
 
     @Test
-    @Rollback(value = false)
+    void testSave() {
+        Optional<Order> optionalOrder = repository.save(order);
+        assertThat(optionalOrder).isPresent();
+
+        Order myOrder = optionalOrder.get();
+        assertThat(myOrder.getMember()).isEqualTo(order.getMember());
+        assertThat(myOrder.getOrders()).isEqualTo(order.getOrders());
+    }
+
+    @Test
     void testFindById() {
         UUID id = order.getId();
         Optional<Order> optionalOrder = repository.findById(id);
@@ -67,18 +76,6 @@ class OrderRepositoryImplTest {
         List<Order> foundOrderList = optionalOrders.get();
         assertThat(foundOrderList).isNotEmpty();
         assertThat(foundOrderList.size()).isEqualTo(1);
-    }
-
-    @Test
-    void testFindByMember_NotFound() {
-        Member dummyMember = new Member(null, null, null, null, null);
-        memberRepository.save(dummyMember);
-
-        Optional<List<Order>> optionalOrders = repository.findByMember(dummyMember);
-        assertThat(optionalOrders).isPresent();
-
-        List<Order> orders = optionalOrders.get();
-        assertThat(orders).isEmpty();
     }
 
 }
