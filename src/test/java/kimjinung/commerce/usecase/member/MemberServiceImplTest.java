@@ -1,6 +1,9 @@
 package kimjinung.commerce.usecase.member;
 
 import kimjinung.commerce.dto.member.*;
+import kimjinung.commerce.exception.MemberAlreadyExistException;
+import kimjinung.commerce.exception.MemberInfoNotMatchException;
+import kimjinung.commerce.exception.MemberNotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,7 +61,7 @@ class MemberServiceImplTest {
                 "12"
 
         );
-        assertThrows(IllegalStateException.class,
+        assertThrows(MemberAlreadyExistException.class,
                 () ->  service.join(duplicateMember))
         ;
     }
@@ -74,9 +77,9 @@ class MemberServiceImplTest {
 
     @Test
     void testSearch_NotMatchUserIdAndEmail() {
-        SearchMemberDto searchMemberDto = new SearchMemberDto("kim", "outlook");
+        SearchMemberDto searchMemberDto = new SearchMemberDto("peter", "gmail");
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(MemberInfoNotMatchException.class,
                 () -> service.search(searchMemberDto));
     }
 
@@ -84,7 +87,7 @@ class MemberServiceImplTest {
     void testSearch_NotFound() {
         SearchMemberDto searchMemberDto = new SearchMemberDto("kim", "outlook");
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(MemberNotFoundException.class,
                 () -> service.search(searchMemberDto));
     }
 
@@ -121,14 +124,14 @@ class MemberServiceImplTest {
                 "11"
         );
 
-        assertThrows(IllegalStateException.class,
+        assertThrows(MemberNotFoundException.class,
                 () -> service.update(updateMemberDto));
     }
 
     @Test
     void testWithdrawalMember_NotExistMember() {
         WithdrawalMemberDto memberDto = new WithdrawalMemberDto("foo");
-        assertThrows(IllegalStateException.class,
+        assertThrows(MemberNotFoundException.class,
                 () -> service.withdrawal(memberDto));
     }
 }

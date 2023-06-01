@@ -55,9 +55,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public SearchMemberResultDto search(SearchMemberDto searchMemberDto) throws IllegalStateException{
+    public SearchMemberResultDto search(SearchMemberDto searchMemberDto) throws RuntimeException{
         String userId = searchMemberDto.getUserId();
-//        String email = searchMemberDto.getEmail(); // ADD 2Step validation
+        String email = searchMemberDto.getEmail();
 
         Optional<Member> optionalMember = repository.findByUserId(userId);
         if (optionalMember.isEmpty()) {
@@ -65,7 +65,7 @@ public class MemberServiceImpl implements MemberService {
         }
         Member foundMember = optionalMember.get();
 
-        if (!userId.equals(foundMember.getUserId())) {
+        if (!email.equals(foundMember.getEmail())) {
             throw new MemberInfoNotMatchException();
         }
 
