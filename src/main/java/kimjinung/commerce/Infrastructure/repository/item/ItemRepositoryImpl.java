@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,11 +42,20 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Optional<List<Item>> findByName(String name) {
-        String jpql = "SELECT i FROM Item i WHERE i.name = :name";
+    public Optional<List<Item>> findByName(List<String> name) {
+        String jpql = "SELECT i FROM Item i WHERE i.name IN :name";
         TypedQuery<Item> query = em.createQuery(jpql, Item.class)
                 .setParameter("name", name);
 
+        List<Item> itemList = query.getResultList();
+        return Optional.ofNullable(itemList);
+    }
+
+    @Override
+    public Optional<List<Item>> findByIds(List<UUID> uuids) {
+        String jpql = "SELECT i FROM Item i WHERE i.uuid IN :uuids";
+        TypedQuery<Item> query = em.createQuery(jpql, Item.class)
+                .setParameter("uuids", uuids);
         List<Item> itemList = query.getResultList();
         return Optional.ofNullable(itemList);
     }

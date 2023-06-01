@@ -11,5 +11,7 @@ public interface ItemRepository {
     UUID save(Item item);
     boolean remove(Item item);
     Optional<Item> findById(UUID uuid);
-    Optional<List<Item>> findByName(String name);
+    Optional<List<Item>> findByName(List<String> name);
+
+    Optional<List<Item>> findByIds(List<UUID> uuids);
 }
