@@ -3,15 +3,12 @@ package kimjinung.commerce.usecase.order;
 import kimjinung.commerce.Infrastructure.repository.item.ItemRepository;
 import kimjinung.commerce.Infrastructure.repository.member.MemberRepository;
 import kimjinung.commerce.Infrastructure.repository.order.OrderRepository;
-import kimjinung.commerce.domain.Item;
-import kimjinung.commerce.domain.Member;
-import kimjinung.commerce.domain.Order;
-import kimjinung.commerce.domain.OrderLine;
+import kimjinung.commerce.domain.*;
 import kimjinung.commerce.dto.order.*;
 import kimjinung.commerce.exception.MemberNotFoundException;
 import kimjinung.commerce.exception.OrderNotExistException;
-import kimjinung.commerce.exception.OrderReadFailException;
-import kimjinung.commerce.exception.ProductNotExistException;
+import kimjinung.commerce.exception.OrderFindFailException;
+import kimjinung.commerce.exception.ItemNotExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,116 +24,84 @@ public class OrderServiceImpl implements OrderService {
     private final ItemRepository itemRepository;
 
     @Override
-    public OrderCreateResultDTO order(OrderCreateDTO orderCreateDTO) throws RuntimeException{
-        // Create order by member
-        Optional<Member> optionalMember = memberRepository.findByUserId(orderCreateDTO.getUserId());
+    public OrderCreateResponseDto order(OrderCreateRequestDto orderCreateRequestDTO) throws RuntimeException{
 
-        if (optionalMember.isEmpty()) {
-            throw new MemberNotFoundException();
-        }
-        Member member = optionalMember.get();
+        String userId = orderCreateRequestDTO.getUserId();
+        Member member = memberRepository.findByUserId(userId).orElseThrow(MemberNotFoundException::new);
         Order order = new Order(member);
 
-        // Find item by id
-        HashMap<String, Integer> itemCart = orderCreateDTO.getItemCart();
+        HashMap<String, Integer> itemCart = orderCreateRequestDTO.getItemCart();
 
-        List<UUID> itemUuids = itemCart.keySet().stream()
-                .map(UUID::fromString)
+        List<Item> items = itemCart.keySet().stream()
+                .map(key -> itemRepository.findById(UUID.fromString(key))
+                        .orElseThrow(ItemNotExistException::new))
                 .collect(Collectors.toList());
 
-        Optional<List<Item>> optionalItems = itemRepository.findByIds(itemUuids);
-
-        if (optionalItems.isEmpty()) {
-            throw new ProductNotExistException("Product not exist");
-        }
-
-        // Order use item and count
+        HashMap<String, Integer> orderItem = new HashMap<>();
         Long totalOrderPrice = 0L;
-        Map<String, Integer> orderItemResult = new HashMap<>();
-
-        List<Item> items = optionalItems.get();
-
         for (Item item : items) {
-            Integer count = itemCart.get(item.getUuid().toString());
-
+            Integer count = itemCart.get(item.getId().toString());
             order.addItem(item, count);
+            orderItem.put(item.getName(), count);
             totalOrderPrice += item.getTotalPriceByCount(count);
-            orderItemResult.put(item.getName(), count);
         }
 
-        order.completeOrder();
+        order.complete();
         orderRepository.save(order);
 
-        return new OrderCreateResultDTO(
+        return new OrderCreateResponseDto(
                 order.getId().toString(),
                 order.getStatus().toString(),
-                orderItemResult,
+                orderItem,
                 totalOrderPrice
         );
 
     }
 
     @Override
-    public List<OrderSearchResultDTO> search(OrderSearchDTO orderSearchDTO) throws RuntimeException{
-        // Find member
-        Optional<Member> optionalMember = memberRepository.findByUserId(orderSearchDTO.getUserId());
+    public List<OrderSearchResponseDto> search(OrderSearchRequestDto orderSearchRequestDto) throws RuntimeException{
+        String userId = orderSearchRequestDto.getUserId();
 
-        if (optionalMember.isEmpty()) {
-            throw new MemberNotFoundException();
-        }
+        Member member = memberRepository.findByUserId(userId).orElseThrow(MemberNotFoundException::new);
+        List<Order> orders = orderRepository.findByMember(member).orElseThrow(OrderFindFailException::new);
 
-        // Find order by member
-        Member member = optionalMember.get();
-        Optional<List<Order>> optionalOrders = orderRepository.findByMember(member);
-
-        if (optionalOrders.isEmpty()) {
-            throw new OrderReadFailException();
-        }
-        List<Order> orders = optionalOrders.get();
-
-
-        // Processing: 각각 오더에 대해서 DTO 클래스로 발라내야함
-        List<OrderSearchResultDTO> orderList = new ArrayList<>();
+        List<OrderSearchResponseDto> orderList = new ArrayList<>();
         for (Order order : orders) {
-            OrderSearchResultDTO orderSearchResultDTO = extractOrder(order);
-            orderList.add(orderSearchResultDTO);
+            OrderSearchResponseDto orderSearchResponseDto = extractOrder(order);
+            orderList.add(orderSearchResponseDto);
         }
-
         return orderList;
     }
 
-    private OrderSearchResultDTO extractOrder(Order order) {
+    @Override
+    public OrderCancelResponseDto cancel(OrderCancelRequestDto orderCancelRequestDTO) {
+        UUID id = UUID.fromString(orderCancelRequestDTO.getId());
+        Order order = orderRepository.findById(id).orElseThrow(OrderNotExistException::new);
+        order.cancel();
+
+        if (order.getStatus().equals(OrderStatus.CANCEL)) {
+            return new OrderCancelResponseDto("ok");
+        }
+        return new OrderCancelResponseDto("fail");
+    }
+
+    private OrderSearchResponseDto extractOrder(Order order) {
         Long totalOrderPrice = 0L;
 
-        Map<String, Integer> orderMap = new HashMap<>();
+        Map<String, Integer> orderItem = new HashMap<>();
         List<OrderLine> orders = order.getOrders();
 
         for (OrderLine orderLine : orders) {
-            orderMap.put(orderLine.getItem().getName(), orderLine.getCount());
+            orderItem.put(orderLine.getItem().getName(), orderLine.getCount());
             totalOrderPrice += orderLine.getTotalPrice();
         }
 
-        return new OrderSearchResultDTO(
+        return new OrderSearchResponseDto(
                 order.getId().toString(),
-                order.getUpdatedAt(),
+                order.getCreatedAt(),
                 order.getStatus().toString(),
-                orderMap,
+                orderItem,
                 totalOrderPrice
         );
-    }
-
-    @Override
-    public void cancel(OrderCancelDTO orderCancelDTO) {
-        String id = orderCancelDTO.getId();
-        UUID uuid = UUID.fromString(id);
-
-        Optional<Order> optionalOrder = orderRepository.findById(uuid);
-
-        if (optionalOrder.isEmpty()) {
-            throw new OrderNotExistException();
-        }
-
-        Order order = optionalOrder.get();
-        order.cancelOrder();
     }
 }

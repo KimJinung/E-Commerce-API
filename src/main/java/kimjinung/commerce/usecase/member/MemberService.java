@@ -3,8 +3,8 @@ package kimjinung.commerce.usecase.member;
 import kimjinung.commerce.dto.member.*;
 
 public interface MemberService {
-    JoinMemberResultDto join(JoinMemberDto joinMemberDto);
-    SearchMemberResultDto search(SearchMemberDto memberSearchDto);
-    UpdateMemberResultDto update(UpdateMemberDto updateMemberDto);
-    boolean withdrawal(WithdrawalMemberDto withdrawalMemberDto);
+    MemberJoinResponseDto join(MemberJoinRequestDto memberJoinRequestDto);
+    MemberSearchResponseDto search(MemberSearchRequestDto memberSearchDto);
+    MemberUpdateResponseDto update(MemberUpdateRequestDto memberUpdateRequestDto);
+    MemberWithdrawalResponseDto withdrawal(MemberWithdrawalRequestDto memberWithdrawalRequestDto);
 }
