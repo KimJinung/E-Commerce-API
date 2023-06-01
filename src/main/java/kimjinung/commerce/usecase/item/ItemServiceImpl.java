@@ -72,12 +72,13 @@ public class ItemServiceImpl implements ItemService {
         if (optionalUpdatedItem.isEmpty()) {
             throw new ItemUpdateFailException();
         }
-        Item upadtedItem = optionalUpdatedItem.get();
+        Item updatedItem = optionalUpdatedItem.get();
 
         return new ItemUpdateResponseDto(
-                upadtedItem.getName(),
-                upadtedItem.getPrice(),
-                upadtedItem.getStockQuantity()
+                updatedItem.getId().toString(),
+                updatedItem.getName(),
+                updatedItem.getPrice(),
+                updatedItem.getStockQuantity()
         );
     }
 
