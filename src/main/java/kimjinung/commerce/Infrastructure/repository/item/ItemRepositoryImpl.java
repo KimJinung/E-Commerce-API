@@ -50,4 +50,13 @@ public class ItemRepositoryImpl implements ItemRepository {
         List<Item> itemList = query.getResultList();
         return Optional.ofNullable(itemList);
     }
+
+    @Override
+    public Optional<List<Item>> findByIds(List<UUID> uuids) {
+        String jpql = "SELECT i FROM Item i WHERE i.uuid IN :uuids";
+        TypedQuery<Item> query = em.createQuery(jpql, Item.class)
+                .setParameter("uuids", uuids);
+        List<Item> itemList = query.getResultList();
+        return Optional.ofNullable(itemList);
+    }
 }

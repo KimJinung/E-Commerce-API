@@ -12,4 +12,6 @@ public interface ItemRepository {
     boolean remove(Item item);
     Optional<Item> findById(UUID uuid);
     Optional<List<Item>> findByName(List<String> name);
+
+    Optional<List<Item>> findByIds(List<UUID> uuids);
 }
