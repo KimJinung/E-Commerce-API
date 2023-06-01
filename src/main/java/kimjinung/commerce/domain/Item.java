@@ -58,4 +58,8 @@ public class Item {
     public void changePrice(int price) {
         this.price = price;
     }
+
+    public void changeStockQuantity(int stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
 }
