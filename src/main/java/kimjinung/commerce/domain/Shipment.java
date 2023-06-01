@@ -20,7 +20,7 @@ public class Shipment {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "item_id", columnDefinition = "BINARY(16)")
-    private UUID uuid;
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")

@@ -18,7 +18,7 @@ public class Member extends BaseEntity {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "uuid", columnDefinition = "BINARY(16)")
-    private UUID uuid;
+    private UUID id;
     private String userId;
     private String password;
     private String phoneNumber;
