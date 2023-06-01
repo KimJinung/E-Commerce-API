@@ -73,7 +73,7 @@ class ItemRepositoryImplTest {
 
     @Test
     void testFindByName() {
-        Optional<List<Item>> optionalItems = repository.findByName(Arrays.asList(itemName));
+        Optional<List<Item>> optionalItems = repository.findByName(List.of(itemName));
         assertThat(optionalItems).isPresent();
 
         List<Item> foundItems = optionalItems.get();
@@ -84,11 +84,20 @@ class ItemRepositoryImplTest {
 
     @Test
     void testFindByName_NotExist() {
-        Optional<List<Item>> optionalItems = repository.findByName(Arrays.asList("Dummy"));
+        Optional<List<Item>> optionalItems = repository.findByName(List.of("Dummy"));
         assertThat(optionalItems).isPresent();
 
         List<Item> foundItems = optionalItems.get();
         assertThat(foundItems).isEmpty();
+    }
+
+    @Test
+    void testFindByIds() {
+        Optional<List<Item>> optionalItems = repository.findByIds(List.of(uuid));
+        assertThat(optionalItems).isPresent();
+
+        List<Item> items = optionalItems.get();
+        assertThat(items.size()).isEqualTo(1);
     }
 
 }
