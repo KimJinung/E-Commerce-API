@@ -51,12 +51,13 @@ class ItemServiceImplTest {
         ItemSearchRequestDto searchDto = new ItemSearchRequestDto("myItem");
         ItemSearchResponseDto itemSearchResponseDto = service.search(searchDto).get(0);
         String id = itemSearchResponseDto.getId();
-        ItemUpdateRequestDto updatedItem = new ItemUpdateRequestDto(id, "updatedItem", 100, 100);
+        ItemUpdateRequestDto updateDto = new ItemUpdateRequestDto(id, "updatedItem", 100, 100);
 
-        assertThat(updatedItem.getId()).isEqualTo(id);
-        assertThat(updatedItem.getName()).isEqualTo("updatedItem");
-        assertThat(updatedItem.getPrice()).isEqualTo(100);
-        assertThat(updatedItem.getStockQuantity()).isEqualTo(100);
+        ItemUpdateResponseDto result = service.update(updateDto);
+
+        assertThat(result.getName()).isEqualTo("updatedItem");
+        assertThat(result.getPrice()).isEqualTo(100);
+        assertThat(result.getStockQuantity()).isEqualTo(100);
     }
 
     @Test
