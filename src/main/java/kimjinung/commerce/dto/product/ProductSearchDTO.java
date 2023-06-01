@@ -8,4 +8,10 @@ import java.util.List;
 public class ProductSearchDTO {
     private List<String> keyword;
 
+    public ProductSearchDTO() {
+    }
+
+    public ProductSearchDTO(List<String> keyword) {
+        this.keyword = keyword;
+    }
 }
