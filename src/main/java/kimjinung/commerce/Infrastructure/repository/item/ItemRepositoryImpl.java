@@ -42,10 +42,10 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Optional<List<Item>> findByName(String... name) {
-        String jpql = "SELECT i FROM Item i WHERE i.name in :name";
+    public Optional<List<Item>> findByName(List<String> name) {
+        String jpql = "SELECT i FROM Item i WHERE i.name IN :name";
         TypedQuery<Item> query = em.createQuery(jpql, Item.class)
-                .setParameter("name", Arrays.asList(name));
+                .setParameter("name", name);
 
         List<Item> itemList = query.getResultList();
         return Optional.ofNullable(itemList);
