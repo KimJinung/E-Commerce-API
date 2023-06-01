@@ -1,6 +1,6 @@
 package kimjinung.commerce.dto.item;
 
-import kimjinung.commerce.dto.BaseDto;
+import kimjinung.commerce.dto.common.BaseDto;
 import lombok.Data;
 
 @Data
