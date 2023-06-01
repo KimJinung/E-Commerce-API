@@ -1,12 +1,14 @@
 package kimjinung.commerce.usecase.order;
 
-import kimjinung.commerce.dto.member.JoinMemberDto;
+import kimjinung.commerce.domain.OrderStatus;
+import kimjinung.commerce.dto.item.ItemRegisterResponseDto;
+import kimjinung.commerce.dto.member.MemberJoinRequestDto;
 import kimjinung.commerce.dto.order.*;
-import kimjinung.commerce.dto.product.ProductDTO;
-import kimjinung.commerce.dto.product.ProductRegisterDTO;
-import kimjinung.commerce.dto.product.ProductSearchDTO;
+import kimjinung.commerce.dto.item.ProductDTO;
+import kimjinung.commerce.dto.item.ItemRegisterRequestDto;
+import kimjinung.commerce.dto.item.ItemSearchRequestDto;
 import kimjinung.commerce.usecase.member.MemberService;
-import kimjinung.commerce.usecase.product.ProductService;
+import kimjinung.commerce.usecase.item.ItemService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,87 +24,75 @@ import static org.assertj.core.api.Assertions.*;
 @SpringBootTest
 class OrderServiceImplTest {
 
-    String userId;
+    String userId = "kim";
+    String itemId;
 
     @Autowired
     OrderService orderService;
     @Autowired
     MemberService memberService;
     @Autowired
-    ProductService productService;
+    ItemService itemService;
 
     @BeforeEach
-    void before() {
-        JoinMemberDto joinMemberDto = new JoinMemberDto(
-                "testUser",
-                "1234",
-                "01012341234",
-                "test@outlook.com",
-                "서울",
-                "강변북로",
-                "1234"
-        );
-
-        memberService.join(joinMemberDto);
-        userId = joinMemberDto.getUserId();
-
-        ProductRegisterDTO food = new ProductRegisterDTO("Food", 100, 10);
-        productService.register(food);
-
-        ProductSearchDTO productSearchDTO = new ProductSearchDTO(List.of("Food"));
-        ProductDTO productDTO = productService.search(productSearchDTO).get(0);
+    void testBefore() {
+        saveMember();
+        saveItem();
 
         HashMap<String, Integer> itemCart = new HashMap<>();
-        itemCart.put(productDTO.getId(), 10);
+        itemCart.put(itemId, 5);
 
-        OrderCreateDTO orderCreateDTO = new OrderCreateDTO(userId, itemCart);
-        orderService.order(orderCreateDTO);
+        OrderCreateRequestDto orderCreateRequestDto = new OrderCreateRequestDto(userId, itemCart);
+        orderService.order(orderCreateRequestDto);
     }
+
+    private void saveMember() {
+        MemberJoinRequestDto dto = new MemberJoinRequestDto(
+                userId, "1234", "01012341234", "gmail@gmail.com", "city", "sttt", "1234"
+        );
+        memberService.join(dto);
+    }
+
+    private void saveItem() {
+        ItemRegisterRequestDto dto = new ItemRegisterRequestDto("foo", 10000, 20);
+        ItemRegisterResponseDto register = itemService.register(dto);
+        itemId = register.getId();
+    }
+
     @Test
     void testOrder() {
         HashMap<String, Integer> itemCart = new HashMap<>();
+        itemCart.put(itemId, 10);
 
-        OrderCreateDTO orderCreateDTO = new OrderCreateDTO(userId, itemCart);
-        OrderCreateResultDTO order = orderService.order(orderCreateDTO);
+        OrderCreateRequestDto orderCreateRequestDto = new OrderCreateRequestDto(userId, itemCart);
+        OrderCreateResponseDto result = orderService.order(orderCreateRequestDto);
 
-        assertThat(order.getTotalOrderPrice()).isEqualTo(0);
+        assertThat(result.getOrderItem().size()).isEqualTo(1);
+        assertThat(result.getStatus()).isEqualTo(OrderStatus.COMPLETE.toString());
+        assertThat(result.getTotalOrderPrice()).isEqualTo(100000);
     }
 
     @Test
     void testSearch() {
-        OrderSearchDTO orderSearchDTO = new OrderSearchDTO(userId);
-        List<OrderSearchResultDTO> search = orderService.search(orderSearchDTO);
+        OrderSearchRequestDto orderSearchRequestDto = new OrderSearchRequestDto(userId);
+        List<OrderSearchResponseDto> result = orderService.search(orderSearchRequestDto);
 
-        assertThat(search.size()).isEqualTo(1);
-        OrderSearchResultDTO orderSearchResultDTO = search.get(0);
-
-        assertThat(orderSearchResultDTO.getOderItem().containsKey("Food")).isTrue();
-        assertThat(orderSearchResultDTO.getOderItem().get("Food")).isEqualTo(10);
-        assertThat(orderSearchResultDTO.getTotalOrderPrice()).isEqualTo(1000);
+        assertThat(result.size()).isEqualTo(1);
+        assertThat(result.get(0).getOderItem().size()).isEqualTo(1);
+        assertThat(result.get(0).getOderItem().containsKey("foo")).isTrue();
+        assertThat(result.get(0).getOderItem().get("foo")).isEqualTo(5);
     }
 
     @Test
     void testCancel() {
-        OrderSearchDTO orderSearchDTO = new OrderSearchDTO(userId);
-        List<OrderSearchResultDTO> search = orderService.search(orderSearchDTO);
+        OrderSearchRequestDto orderSearchRequestDto = new OrderSearchRequestDto(userId);
+        List<OrderSearchResponseDto> orders = orderService.search(orderSearchRequestDto);
+        String id = orders.get(0).getId();
 
-        assertThat(search.size()).isEqualTo(1);
-        OrderSearchResultDTO orderSearchResultDTO = search.get(0);
+        OrderCancelRequestDto requestDto = new OrderCancelRequestDto(id);
+        OrderCancelResponseDto result = orderService.cancel(requestDto);
 
-        assertThat(orderSearchResultDTO.getStatus()).isEqualTo("COMPLETE");
-
-        // Cancel
-        String orderId = orderSearchResultDTO.getId();
-        OrderCancelDTO orderCancelDTO = new OrderCancelDTO(orderId);
-        orderService.cancel(orderCancelDTO);
-
-        // Check
-        orderSearchDTO = new OrderSearchDTO(userId);
-        search = orderService.search(orderSearchDTO);
-
-        assertThat(search.size()).isEqualTo(1);
-        orderSearchResultDTO = search.get(0);
-
-        assertThat(orderSearchResultDTO.getStatus()).isEqualTo("CANCEL");
+        assertThat(result.getStatus()).isEqualTo("ok");
     }
+
 }

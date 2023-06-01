@@ -4,122 +4,132 @@ import kimjinung.commerce.Infrastructure.repository.member.MemberRepository;
 import kimjinung.commerce.domain.Address;
 import kimjinung.commerce.domain.Member;
 import kimjinung.commerce.dto.member.*;
-import kimjinung.commerce.exception.MemberAlreadyExistException;
-import kimjinung.commerce.exception.MemberJoinFailException;
-import kimjinung.commerce.exception.MemberNotFoundException;
-import kimjinung.commerce.exception.MemberInfoNotMatchException;
+import kimjinung.commerce.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository repository;
+    private final MemberRepository memberRepository;
 
     @Override
-    public JoinMemberResultDto join(JoinMemberDto joinMemberDto) throws RuntimeException{
-        Optional<Member> optionalMember = repository.findByUserId(joinMemberDto.getUserId());
-        if (optionalMember.isPresent()) {
-            throw new MemberAlreadyExistException();
+    public MemberJoinResponseDto join(MemberJoinRequestDto memberJoinRequestDto) throws RuntimeException {
+
+        String requestUserId = memberJoinRequestDto.getUserId();
+        Optional<Member> optionalDuplicateMember = memberRepository.findByUserId(requestUserId);
+        if (optionalDuplicateMember.isPresent()) {
+            throw new UserIdAlreadyExistException(requestUserId);
         }
 
-        String userId = joinMemberDto.getUserId();
-        String password = joinMemberDto.getPassword();
-        String email = joinMemberDto.getEmail();
-        String phoneNumber = joinMemberDto.getPhoneNumber();
-        String city = joinMemberDto.getCity();
-        String street = joinMemberDto.getStreet();
-        String zipcode = joinMemberDto.getZipcode();
-        Address address = new Address(city, street, zipcode);
-        Member member = new Member(userId, password, phoneNumber, email, address);
+        Member newMember = createMember(memberJoinRequestDto);
 
-        UUID result = repository.save(member);
-        if (result == null) {
+        Optional<Member> optionalMember = memberRepository.save(newMember);
+        if (optionalMember.isEmpty()) {
             throw new MemberJoinFailException();
         }
+        Member member = optionalMember.get();
 
-        Optional<Member> byUserId = repository.findByUserId(userId);
-        if (byUserId.isEmpty()) {
-            throw new MemberNotFoundException();
-        }
-        Member savedMember = byUserId.get();
-
-        String savedMemberUserId = savedMember.getUserId();
-        return new JoinMemberResultDto(savedMemberUserId);
+        return new MemberJoinResponseDto(
+                member.getUserId(),
+                member.getEmail(),
+                member.getPhoneNumber()
+        );
     }
 
     @Override
-    public SearchMemberResultDto search(SearchMemberDto searchMemberDto) throws RuntimeException{
-        String userId = searchMemberDto.getUserId();
-        String email = searchMemberDto.getEmail();
+    public MemberSearchResponseDto search(MemberSearchRequestDto memberSearchRequestDto) throws RuntimeException {
 
-        Optional<Member> optionalMember = repository.findByUserId(userId);
+        String userId = memberSearchRequestDto.getUserId();
+
+        Optional<Member> optionalMember = memberRepository.findByUserId(userId);
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();
         }
         Member foundMember = optionalMember.get();
 
-        if (!email.equals(foundMember.getEmail())) {
-            throw new MemberInfoNotMatchException();
-        }
-
-        return new SearchMemberResultDto(
+        return new MemberSearchResponseDto(
                 foundMember.getUserId(),
-                foundMember.getPassword()
+                foundMember.getEmail()
         );
     }
 
     @Override
-    public UpdateMemberResultDto update(UpdateMemberDto updateMemberDto) throws IllegalStateException{
-        Optional<Member> optionalMember = repository.findByUserId(updateMemberDto.getUserId());
+    public MemberUpdateResponseDto update(MemberUpdateRequestDto memberUpdateRequestDto) throws RuntimeException {
+
+        String requestUserId = memberUpdateRequestDto.getUserId();
+        Optional<Member> optionalMember = memberRepository.findByUserId(requestUserId);
+
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();
         }
         Member member = optionalMember.get();
 
-        String password = updateMemberDto.getPassword();
-        String email = updateMemberDto.getEmail();
-        String phoneNumber = updateMemberDto.getPhoneNumber();
-        String city = updateMemberDto.getCity();
-        String street = updateMemberDto.getStreet();
-        String zipCode = updateMemberDto.getZipCode();
-        Address address = new Address(city, street, zipCode);
+        updateMember(member, memberUpdateRequestDto);
 
-        member.changePassword(password);
-        member.changeEmail(email);
-        member.changePhoneNumber(phoneNumber);
-        member.changeAddress(address);
-
-        Optional<Member> optionalUpdatedMember = repository.findByUserId(member.getUserId());
+        Optional<Member> optionalUpdatedMember = memberRepository.findByUserId(requestUserId);
         if (optionalUpdatedMember.isEmpty()) {
-            throw new MemberNotFoundException();
+            throw new MemberUpdateFailException();
         }
-        Member updatedMember = optionalUpdatedMember.get();
+        Member updatedMember = optionalMember.get();
 
-        return new UpdateMemberResultDto(
+        return new MemberUpdateResponseDto(
+                updatedMember.getUserId(),
                 updatedMember.getEmail(),
                 updatedMember.getPhoneNumber(),
                 updatedMember.getAddress().getCity(),
                 updatedMember.getAddress().getStreet(),
                 updatedMember.getAddress().getZipCode()
         );
-
     }
 
     @Override
-    public boolean withdrawal(WithdrawalMemberDto withdrawalMemberDto) {
-        String userId = withdrawalMemberDto.getUserId();
-        Optional<Member> optionalMember = repository.findByUserId(userId);
+    public MemberWithdrawalResponseDto withdrawal(MemberWithdrawalRequestDto memberWithdrawalRequestDto)
+            throws RuntimeException{
+
+        String requestUserId = memberWithdrawalRequestDto.getUserId();
+        Optional<Member> optionalMember = memberRepository.findByUserId(requestUserId);
+
         if (optionalMember.isEmpty()) {
             throw new MemberNotFoundException();
         }
         Member member = optionalMember.get();
-        return repository.remove(member);
+        Optional<Member> optionalRemovedMember = memberRepository.remove(member);
+
+        if (optionalRemovedMember.isPresent()) {
+            throw new MemberWithdrawalFailException();
+        }
+
+        return new MemberWithdrawalResponseDto(requestUserId);
+    }
+
+    private Member createMember(MemberJoinRequestDto memberJoinRequestDto) {
+        String userId = memberJoinRequestDto.getUserId();
+        String password = memberJoinRequestDto.getPassword();
+        String email = memberJoinRequestDto.getEmail();
+        String phoneNumber = memberJoinRequestDto.getPhoneNumber();
+        String city = memberJoinRequestDto.getCity();
+        String street = memberJoinRequestDto.getStreet();
+        String zipcode = memberJoinRequestDto.getZipcode();
+        Address address = new Address(city, street, zipcode);
+
+        return new Member(userId, password, phoneNumber, email, address);
+    }
+
+    private void updateMember(Member member, MemberUpdateRequestDto memberUpdateRequestDto) {
+        String city = memberUpdateRequestDto.getCity();
+        String street = memberUpdateRequestDto.getStreet();
+        String zipCode = memberUpdateRequestDto.getZipCode();
+        Address address = new Address(city, street, zipCode);
+
+        member.changePassword(memberUpdateRequestDto.getPassword());
+        member.changeEmail(memberUpdateRequestDto.getEmail());
+        member.changePhoneNumber(memberUpdateRequestDto.getPhoneNumber());
+        member.changeAddress(address);
     }
 }

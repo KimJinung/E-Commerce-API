@@ -20,7 +20,7 @@ public class Item {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "item_id", columnDefinition = "BINARY(16)")
-    private UUID uuid;
+    private UUID id;
     private String name;
     private Integer price;
     private Integer stockQuantity;

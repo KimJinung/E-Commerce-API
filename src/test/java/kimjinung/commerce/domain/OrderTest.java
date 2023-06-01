@@ -42,7 +42,7 @@ class OrderTest {
 
     @Test
     void testCompleteOrder() {
-        order.completeOrder();
+        order.complete();
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.COMPLETE);
         assertThat(order.getShipments().get(order.getShipments().size() - 1).getStatus())
@@ -51,8 +51,8 @@ class OrderTest {
 
     @Test
     void testCancelOrder() {
-        order.completeOrder();
-        order.cancelOrder();
+        order.complete();
+        order.cancel();
 
         assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCEL);
         assertThat(order.getShipments().get(order.getShipments().size() - 1).getStatus())
@@ -61,13 +61,13 @@ class OrderTest {
 
     @Test
     void testCancelOrder_IllegalStatueException() {
-        order.completeOrder();
+        order.complete();
         Shipment lastShip = order.getShipments().get(order.getShipments().size() - 1);
         lastShip.startShip();
 
         assertThrows(
                 IllegalStateException.class,
-                () -> order.cancelOrder());
+                () -> order.cancel());
     }
 
 }

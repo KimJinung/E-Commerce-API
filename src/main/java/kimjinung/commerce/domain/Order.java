@@ -1,5 +1,6 @@
 package kimjinung.commerce.domain;
 
+import kimjinung.commerce.domain.common.BaseEntity;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,7 +16,7 @@ import static kimjinung.commerce.domain.OrderStatus.*;
 @Getter
 @Table(name = "orders")
 @Entity
-public class Order extends BaseEntity{
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -53,12 +54,12 @@ public class Order extends BaseEntity{
         this.orders.add(orderLine);
     }
 
-    public void completeOrder() {
+    public void complete() {
         this.status = COMPLETE;
         this.shipments.add(new Shipment(this));
     }
 
-    public void cancelOrder() {
+    public void cancel() {
         Shipment lastShip = shipments.get(shipments.size() - 1);
 
         if (lastShip.getStatus() != ShipmentStatus.PENDING) {

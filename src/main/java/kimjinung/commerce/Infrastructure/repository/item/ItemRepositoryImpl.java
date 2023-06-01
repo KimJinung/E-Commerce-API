@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,48 +13,33 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Repository
 public class ItemRepositoryImpl implements ItemRepository {
+
     private final EntityManager em;
 
     @Override
-    public UUID save(Item item) {
+    public Optional<Item> save(Item item) {
         em.persist(item);
-        return item.getUuid();
+        return findById(item.getId());
     }
 
     @Override
-    public boolean remove(Item item) {
-        UUID uuid = item.getUuid();
-
-        if (uuid == null) {
-            return false;
-        } else if(findById(uuid).isEmpty()) {
-            return false;
-        }
+    public Optional<Item> remove(Item item) {
         em.remove(item);
-        return true;
+        return findById(item.getId());
     }
 
     @Override
-    public Optional<Item> findById(UUID uuid) {
-        Item item = em.find(Item.class, uuid);
+    public Optional<Item> findById(UUID id) {
+        Item item = em.find(Item.class, id);
         return Optional.ofNullable(item);
     }
 
     @Override
-    public Optional<List<Item>> findByName(List<String> name) {
-        String jpql = "SELECT i FROM Item i WHERE i.name IN :name";
+    public Optional<List<Item>> findByName(String name) {
+        String jpql = "SELECT i FROM Item i WHERE i.name = :name";
         TypedQuery<Item> query = em.createQuery(jpql, Item.class)
                 .setParameter("name", name);
 
-        List<Item> itemList = query.getResultList();
-        return Optional.ofNullable(itemList);
-    }
-
-    @Override
-    public Optional<List<Item>> findByIds(List<UUID> uuids) {
-        String jpql = "SELECT i FROM Item i WHERE i.uuid IN :uuids";
-        TypedQuery<Item> query = em.createQuery(jpql, Item.class)
-                .setParameter("uuids", uuids);
         List<Item> itemList = query.getResultList();
         return Optional.ofNullable(itemList);
     }

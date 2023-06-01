@@ -18,24 +18,15 @@ public class ShipmentRepositoryImpl implements ShipmentRepository {
     private final EntityManager em;
 
     @Override
-    public UUID save(Shipment shipment) {
+    public Optional<Shipment> save(Shipment shipment) {
         em.persist(shipment);
-        return shipment.getUuid();
+        return findById(shipment.getId());
     }
 
     @Override
-    public Optional<Shipment> findById(UUID uuid) {
-        Shipment shipment = em.find(Shipment.class, uuid);
+    public Optional<Shipment> findById(UUID id) {
+        Shipment shipment = em.find(Shipment.class, id);
         return Optional.ofNullable(shipment);
     }
 
-    @Override
-    public Optional<List<Shipment>> findByOrder(Order order) throws InvalidDataAccessApiUsageException {
-        String jpql = "SELECT s FROM Shipment s where s.order = :order";
-        List<Shipment> shipments = em.createQuery(jpql, Shipment.class)
-                .setParameter("order", order)
-                .getResultList();
-
-        return Optional.ofNullable(shipments);
-    }
 }

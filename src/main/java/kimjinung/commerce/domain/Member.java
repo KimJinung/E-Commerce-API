@@ -1,5 +1,6 @@
 package kimjinung.commerce.domain;
 
+import kimjinung.commerce.domain.common.BaseEntity;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -8,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 @Entity
-public class Member extends BaseEntity{
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -17,7 +18,7 @@ public class Member extends BaseEntity{
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "uuid", columnDefinition = "BINARY(16)")
-    private UUID uuid;
+    private UUID id;
     private String userId;
     private String password;
     private String phoneNumber;
