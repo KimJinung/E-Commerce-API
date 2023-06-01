@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -72,7 +73,7 @@ class ItemRepositoryImplTest {
 
     @Test
     void testFindByName() {
-        Optional<List<Item>> optionalItems = repository.findByName(itemName);
+        Optional<List<Item>> optionalItems = repository.findByName(Arrays.asList(itemName));
         assertThat(optionalItems).isPresent();
 
         List<Item> foundItems = optionalItems.get();
@@ -83,7 +84,7 @@ class ItemRepositoryImplTest {
 
     @Test
     void testFindByName_NotExist() {
-        Optional<List<Item>> optionalItems = repository.findByName("Dummy");
+        Optional<List<Item>> optionalItems = repository.findByName(Arrays.asList("Dummy"));
         assertThat(optionalItems).isPresent();
 
         List<Item> foundItems = optionalItems.get();
