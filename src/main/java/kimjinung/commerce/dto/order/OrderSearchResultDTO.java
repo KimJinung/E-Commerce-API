@@ -11,15 +11,17 @@ public class OrderSearchResultDTO {
 
     private String id;
     private LocalDate orderDate;
+    private String status;
     private Map<String, Integer> oderItem;
     private Long totalOrderPrice;
 
     public OrderSearchResultDTO() {
     }
 
-    public OrderSearchResultDTO(String id, LocalDateTime orderDate, Map<String, Integer> oderItem, Long totalOrderPrice) {
+    public OrderSearchResultDTO(String id, LocalDateTime orderDate, String status, Map<String, Integer> oderItem, Long totalOrderPrice) {
         this.id = id;
         this.orderDate = orderDate.toLocalDate();
+        this.status = status;
         this.oderItem = oderItem;
         this.totalOrderPrice = totalOrderPrice;
     }

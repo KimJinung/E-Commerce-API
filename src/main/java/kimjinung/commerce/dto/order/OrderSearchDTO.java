@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public class OrderSearchDTO {
-    private String userUuid;
+    private String userId;
 
     public OrderSearchDTO() {
     }
 
     public OrderSearchDTO(String userUuid) {
-        this.userUuid = userUuid;
+        this.userId = userUuid;
     }
 }

@@ -6,14 +6,14 @@ import java.util.HashMap;
 
 @Getter
 public class OrderCreateDTO {
-    private String userUuid;
+    private String userId;
     private HashMap<String, Integer> itemCart;
 
     public OrderCreateDTO() {
     }
 
-    public OrderCreateDTO(String userUuid, HashMap<String, Integer> itemCart) {
-        this.userUuid = userUuid;
+    public OrderCreateDTO(String userId, HashMap<String, Integer> itemCart) {
+        this.userId = userId;
         this.itemCart = itemCart;
     }
 }
