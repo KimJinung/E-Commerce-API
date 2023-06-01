@@ -3,7 +3,7 @@ package kimjinung.commerce.dto.member;
 import lombok.Getter;
 
 @Getter
-public class UpdateMemberDto {
+public class MemberUpdateRequestDto {
     private String userId;
     private String password;
     private String email;
@@ -12,10 +12,10 @@ public class UpdateMemberDto {
     private String street;
     private String zipCode;
 
-    public UpdateMemberDto() {
+    protected MemberUpdateRequestDto() {
     }
 
-    public UpdateMemberDto(
+    public MemberUpdateRequestDto(
             String userId,
             String password,
             String email,

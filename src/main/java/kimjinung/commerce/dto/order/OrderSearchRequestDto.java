@@ -3,13 +3,13 @@ package kimjinung.commerce.dto.order;
 import lombok.Getter;
 
 @Getter
-public class OrderSearchDTO {
+public class OrderSearchRequestDto {
     private String userId;
 
-    public OrderSearchDTO() {
+    public OrderSearchRequestDto() {
     }
 
-    public OrderSearchDTO(String userUuid) {
+    public OrderSearchRequestDto(String userUuid) {
         this.userId = userUuid;
     }
 }

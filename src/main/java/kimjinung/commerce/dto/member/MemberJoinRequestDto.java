@@ -1,7 +1,6 @@
 package kimjinung.commerce.dto.member;
 
 import lombok.Data;
-import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -9,30 +8,36 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class JoinMemberDto {
-
+public class MemberJoinRequestDto {
     @NotNull
+    @NotBlank(message = "Input user id")
     private String userId;
     @NotNull
-    @NotBlank(message = "비밀번호를 입력해주세요.")
+    @NotBlank(message = "Input password")
     private String password;
-    @NotNull(message = "전화 번호 11자리는 필수입니다.")
-    @Pattern(regexp="(^$|[0-9]{11})", message = "전화 번호 형식은 -를 제외한 11자리입니다.")
+    @NotNull
+    @Pattern(
+            regexp="(^$|[0-9]{11})",
+            message = "Please check phone number format"
+    )
     private String phoneNumber;
     @NotNull(message = "이메일은 필수입니다.")
-    @Email(message = "이메일 형식을 확인해주세요.")
+    @Email(message = "Please check email format")
     private String email;
     @NotNull
+    @NotBlank(message = "Input city address")
     private String city;
     @NotNull
+    @NotBlank(message = "Input street address")
     private String street;
     @NotNull
+    @NotBlank(message = "Input zip code address")
     private String zipcode;
 
-    public JoinMemberDto() {
+    protected MemberJoinRequestDto() {
     }
 
-    public JoinMemberDto(
+    public MemberJoinRequestDto(
             String userId,
             String password,
             String phoneNumber,

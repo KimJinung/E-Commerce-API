@@ -1,16 +1,15 @@
 package kimjinung.commerce.dto.member;
 
-
 import lombok.Getter;
 
 @Getter
-public class WithdrawalMemberDto {
+public class MemberSearchRequestDto {
     private String userId;
 
-    public WithdrawalMemberDto() {
+    protected MemberSearchRequestDto() {
     }
 
-    public WithdrawalMemberDto(String userId) {
+    public MemberSearchRequestDto(String userId) {
         this.userId = userId;
     }
 }

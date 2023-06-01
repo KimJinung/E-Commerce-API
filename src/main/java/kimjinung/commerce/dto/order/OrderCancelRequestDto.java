@@ -3,13 +3,13 @@ package kimjinung.commerce.dto.order;
 import lombok.Getter;
 
 @Getter
-public class OrderCancelDTO {
+public class OrderCancelRequestDto {
     private String id;
 
-    public OrderCancelDTO() {
+    public OrderCancelRequestDto() {
     }
 
-    public OrderCancelDTO(String id) {
+    public OrderCancelRequestDto(String id) {
         this.id = id;
     }
 }

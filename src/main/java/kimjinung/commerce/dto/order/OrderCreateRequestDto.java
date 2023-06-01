@@ -5,14 +5,14 @@ import lombok.Getter;
 import java.util.HashMap;
 
 @Getter
-public class OrderCreateDTO {
+public class OrderCreateRequestDto {
     private String userId;
     private HashMap<String, Integer> itemCart;
 
-    public OrderCreateDTO() {
+    public OrderCreateRequestDto() {
     }
 
-    public OrderCreateDTO(String userId, HashMap<String, Integer> itemCart) {
+    public OrderCreateRequestDto(String userId, HashMap<String, Integer> itemCart) {
         this.userId = userId;
         this.itemCart = itemCart;
     }

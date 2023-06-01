@@ -1,4 +1,4 @@
-package kimjinung.commerce.dto.product;
+package kimjinung.commerce.dto.item;
 
 import lombok.Getter;
 

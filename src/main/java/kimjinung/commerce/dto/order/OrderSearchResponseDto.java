@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Data
-public class OrderSearchResultDTO {
+public class OrderSearchResponseDto {
 
     private String id;
     private LocalDate orderDate;
@@ -15,10 +15,10 @@ public class OrderSearchResultDTO {
     private Map<String, Integer> oderItem;
     private Long totalOrderPrice;
 
-    public OrderSearchResultDTO() {
+    public OrderSearchResponseDto() {
     }
 
-    public OrderSearchResultDTO(String id, LocalDateTime orderDate, String status, Map<String, Integer> oderItem, Long totalOrderPrice) {
+    public OrderSearchResponseDto(String id, LocalDateTime orderDate, String status, Map<String, Integer> oderItem, Long totalOrderPrice) {
         this.id = id;
         this.orderDate = orderDate.toLocalDate();
         this.status = status;
