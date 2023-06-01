@@ -1,9 +1,12 @@
 package kimjinung.commerce.domain;
 
+import lombok.Getter;
+
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PreUpdate;
 import java.time.LocalDateTime;
 
+@Getter
 @MappedSuperclass
 public class BaseEntity {
     private LocalDateTime createdAt;
