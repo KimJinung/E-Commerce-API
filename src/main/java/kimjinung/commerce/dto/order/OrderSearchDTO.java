@@ -6,4 +6,10 @@ import lombok.Getter;
 public class OrderSearchDTO {
     private String userUuid;
 
+    public OrderSearchDTO() {
+    }
+
+    public OrderSearchDTO(String userUuid) {
+        this.userUuid = userUuid;
+    }
 }

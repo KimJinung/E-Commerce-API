@@ -4,14 +4,20 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 public class OrderDTO {
     private String id;
-    private LocalDateTime orderDate;
+    private final LocalDateTime orderDate = LocalDateTime.now();
     private String status; //TODO refactor to enum class
-
-    private List<ProductDTO> orderItemList;
-
+    private Map<String, Integer> orderItem;
     private Long totalOrderPrice;
+
+    public OrderDTO(String id, String status, Map<String, Integer> orderItem, Long totalOrderPrice) {
+        this.id = id;
+        this.status = status;
+        this.orderItem = orderItem;
+        this.totalOrderPrice = totalOrderPrice;
+    }
 }
