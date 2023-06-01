@@ -1,4 +1,4 @@
-package kimjinung.commerce.domain;
+package kimjinung.commerce.domain.common;
 
 import lombok.Getter;
 

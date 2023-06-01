@@ -1,4 +1,4 @@
-package kimjinung.commerce.controller.api.error;
+package kimjinung.commerce.dto.error;
 
 import lombok.Data;
 

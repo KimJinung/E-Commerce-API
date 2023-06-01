@@ -1,5 +1,6 @@
 package kimjinung.commerce.domain;
 
+import kimjinung.commerce.domain.common.BaseEntity;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,7 +16,7 @@ import static kimjinung.commerce.domain.OrderStatus.*;
 @Getter
 @Table(name = "orders")
 @Entity
-public class Order extends BaseEntity{
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(generator = "uuid")
