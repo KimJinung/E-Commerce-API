@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public abstract class BaseApiController {
-    public static void validateRequest(BindingResult bindingResult) throws InvalidRequestException {
+    protected static void validateRequest(BindingResult bindingResult) throws InvalidRequestException {
         ArrayList<String> errors = new ArrayList<>();
 
         if (bindingResult.hasGlobalErrors()) {
