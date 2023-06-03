@@ -1,8 +1,10 @@
 package kimjinung.commerce.controller.exhandler;
 
 import kimjinung.commerce.dto.common.ResponseDto;
+import kimjinung.commerce.dto.error.Error;
 import kimjinung.commerce.dto.error.ErrorResult;
 import kimjinung.commerce.exception.InvalidRequestException;
+import kimjinung.commerce.exception.ItemNotFoundException;
 import kimjinung.commerce.exception.ItemRegisterFailException;
 import kimjinung.commerce.exception.MemberNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,30 +24,35 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(RuntimeException.class)
     public ResponseDto<ErrorResult> runtimeException(RuntimeException ex) {
-        return baseException(400, "Server error", ex);
+        return baseException(400, Error.SERVER_ERROR, ex);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseDto<ErrorResult> invalidRequestException(InvalidRequestException ex) {
-        return baseException(400, "Invalid Request", ex);
+        return baseException(400, Error.INVALID_REQUEST, ex);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(MemberNotFoundException.class)
     public ResponseDto<ErrorResult> memberNotFoundException(MemberNotFoundException ex) {
-        return baseException(404, "Member not found", ex);
+        return baseException(404, Error.NOT_FOUND, ex);
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseDto<ErrorResult> itemNotFoundException(ItemNotFoundException ex) {
+        return baseException(404, Error.NOT_FOUND, ex);
+    }
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ItemRegisterFailException.class)
     public ResponseDto<ErrorResult> itemRegisterFailException(ItemRegisterFailException ex) {
-        return baseException(500, "Item register fail", ex);
+        return baseException(500, Error.SERVER_ERROR, ex);
     }
 
-    private ResponseDto<ErrorResult> baseException(int statusCode, String error, RuntimeException exception) {
+    private ResponseDto<ErrorResult> baseException(int statusCode, Error error, RuntimeException exception) {
         log.info(exception.getMessage());
-        ErrorResult errorResult = new ErrorResult(error, exception.getMessage());
+        ErrorResult errorResult = new ErrorResult(error.toString(), exception.getMessage());
         return new ResponseDto<>(statusCode, errorResult);
     }
 
