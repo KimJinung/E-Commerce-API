@@ -8,7 +8,7 @@ import kimjinung.commerce.dto.order.*;
 import kimjinung.commerce.exception.MemberNotFoundException;
 import kimjinung.commerce.exception.OrderNotExistException;
 import kimjinung.commerce.exception.OrderFindFailException;
-import kimjinung.commerce.exception.ItemNotExistException;
+import kimjinung.commerce.exception.ItemNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
 
         List<Item> items = itemCart.keySet().stream()
                 .map(key -> itemRepository.findById(UUID.fromString(key))
-                        .orElseThrow(ItemNotExistException::new))
+                        .orElseThrow(ItemNotFoundException::new))
                 .collect(Collectors.toList());
 
         HashMap<String, Integer> orderItem = new HashMap<>();
