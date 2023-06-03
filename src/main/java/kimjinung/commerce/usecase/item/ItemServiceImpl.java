@@ -64,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
         Optional<Item> optionalItem = itemRepository.findById(id);
 
         if (optionalItem.isEmpty()) {
-            throw new ItemNotExistException();
+            throw new ItemNotFoundException();
         }
         Item item = optionalItem.get();
 
@@ -90,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
         Optional<Item> optionalItem = itemRepository.findById(id);
 
         if (optionalItem.isEmpty()) {
-            throw new ItemNotExistException();
+            throw new ItemNotFoundException();
         }
         Item item = optionalItem.get();
         String name = item.getName();
