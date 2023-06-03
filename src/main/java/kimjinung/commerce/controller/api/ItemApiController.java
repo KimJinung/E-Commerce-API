@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static kimjinung.commerce.controller.exhandler.ApiExceptionHandler.*;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/item")
 @RestController
-public class ItemApiController {
+public class ItemApiController extends BaseApiController{
 
     private final ItemService itemService;
 

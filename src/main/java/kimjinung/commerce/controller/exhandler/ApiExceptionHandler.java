@@ -9,13 +9,10 @@ import kimjinung.commerce.exception.ItemRegisterFailException;
 import kimjinung.commerce.exception.MemberNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -56,29 +53,4 @@ public class ApiExceptionHandler {
         return new ResponseDto<>(statusCode, errorResult);
     }
 
-    public static void validateRequest(BindingResult bindingResult) throws InvalidRequestException {
-        ArrayList<String> errors = new ArrayList<>();
-
-        if (bindingResult.hasGlobalErrors()) {
-            errors.addAll(bindingResult.getGlobalErrors()
-                    .stream()
-                    .map(error -> makeErrorMessage(error.getObjectName(), error.getDefaultMessage()))
-                    .collect(Collectors.toList()));
-        }
-
-        if (bindingResult.hasFieldErrors()) {
-            errors.addAll(bindingResult.getFieldErrors()
-                    .stream()
-                    .map(error -> makeErrorMessage(error.getField(), error.getDefaultMessage()))
-                    .collect(Collectors.toList()));
-        }
-
-        if (!errors.isEmpty()) {
-            throw new InvalidRequestException(errors.toString());
-        }
-    }
-
-    private static String makeErrorMessage(String field, String msg) {
-        return String.format("[%s]= %s", field, msg);
-    }
 }
