@@ -8,11 +8,11 @@ import lombok.Data;
 public class ResponseDto<T> {
     private int statusCode;
     private Long timestamp;
-    private T data;
+    private T response;
 
-    public ResponseDto(int statusCode, T data) {
+    public ResponseDto(int statusCode, T response) {
         this.statusCode = statusCode;
         this.timestamp = System.currentTimeMillis();
-        this.data = data;
+        this.response = response;
     }
 }
