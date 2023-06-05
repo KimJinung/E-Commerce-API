@@ -19,7 +19,7 @@ public class ItemApiController extends BaseApiController{
     private final ItemService itemService;
 
     @PostMapping("/register")
-    public ResponseDto<?> register(
+    public ResponseDto<ItemRegisterResponseDto> register(
             @RequestBody @Validated ItemRegisterRequestDto itemRegisterRequestDto,
             BindingResult bindingResult
     ) {
@@ -29,7 +29,7 @@ public class ItemApiController extends BaseApiController{
     }
 
     @GetMapping("/search")
-    public ResponseDto<?> search(
+    public ResponseDto<List<ItemSearchResponseDto>> search(
             @RequestBody @Validated ItemSearchRequestDto itemSearchRequestDto,
             BindingResult bindingResult
     ) {
@@ -39,7 +39,7 @@ public class ItemApiController extends BaseApiController{
     }
 
     @PatchMapping("/update")
-    public ResponseDto<?> update(
+    public ResponseDto<ItemUpdateResponseDto> update(
             @RequestBody @Validated ItemUpdateRequestDto itemUpdateRequestDto,
             BindingResult bindingResult
     ) {
@@ -49,7 +49,7 @@ public class ItemApiController extends BaseApiController{
     }
 
     @DeleteMapping("/delete")
-    public ResponseDto<?> remove(
+    public ResponseDto<ItemRemoveResponseDto> remove(
         @RequestBody @Validated ItemRemoveRequestDto itemRemoveRequestDto,
         BindingResult bindingResult
     ) {
