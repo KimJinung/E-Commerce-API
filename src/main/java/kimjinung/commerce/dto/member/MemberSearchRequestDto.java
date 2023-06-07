@@ -1,11 +1,11 @@
 package kimjinung.commerce.dto.member;
 
+import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
-@Getter
+@Data
 public class MemberSearchRequestDto {
 
     @NotBlank

@@ -1,8 +1,9 @@
 package kimjinung.commerce.dto.member;
 
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+@Data
 public class MemberWithdrawalResponseDto {
     private String userId;
 

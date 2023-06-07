@@ -21,7 +21,10 @@ public class MemberJoinRequestDto {
     )
     private String phoneNumber;
 
-    @Email(message = "Please check email format")
+    //TODO check email format
+//    @Email(
+//            message = "Please check email format"
+//    )
     private String email;
 
     @NotBlank(message = "Input city address")
