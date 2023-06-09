@@ -52,7 +52,7 @@ class OrderServiceImplTest {
     }
 
     private void saveItem() {
-        ItemRegisterRequestDto dto = new ItemRegisterRequestDto("foo", 10000, 20);
+        ItemRegisterRequestDto dto = new ItemRegisterRequestDto(userId, "foo", 10000, 20);
         ItemRegisterResponseDto register = itemService.register(dto);
         itemId = register.getId();
     }
