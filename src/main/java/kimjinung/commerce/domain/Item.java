@@ -3,11 +3,10 @@ package kimjinung.commerce.domain;
 import lombok.Getter;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
+
+import static javax.persistence.FetchType.LAZY;
 
 @Getter
 @Entity
@@ -21,6 +20,10 @@ public class Item {
     )
     @Column(name = "item_id", columnDefinition = "BINARY(16)")
     private UUID id;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "uuid")
+    private Member seller;
     private String name;
     private Integer price;
     private Integer stockQuantity;
@@ -29,6 +32,13 @@ public class Item {
     }
 
     public Item(String name, Integer price, Integer stockQuantity) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
+
+    public Item(Member seller, String name, Integer price, Integer stockQuantity) {
+        this.seller = seller;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;

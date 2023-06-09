@@ -30,8 +30,10 @@ class ItemApiControllerTest {
 
     @Test
     void testRegister() throws Exception {
-        ItemRegisterRequestDto requestDto = new ItemRegisterRequestDto("MacBook", 1000, 2);
-        ItemRegisterResponseDto responseDto = new ItemRegisterResponseDto(UUID.randomUUID().toString(), "MacBook", 1000, 2);
+        ItemRegisterRequestDto requestDto = new ItemRegisterRequestDto(
+                "jinung","MacBook", 1000, 2);
+        ItemRegisterResponseDto responseDto = new ItemRegisterResponseDto(
+                UUID.randomUUID().toString(), "jinung", "MacBook", 1000, 2);
         given(itemService.register(requestDto)).willReturn(responseDto);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/item/register")

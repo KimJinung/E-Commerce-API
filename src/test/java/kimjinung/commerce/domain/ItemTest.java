@@ -13,7 +13,9 @@ class ItemTest {
 
     @BeforeEach
     void beforeEach() {
-        item = new Item("MacBook", 1000000, 10);
+        Address address = new Address("city", "street", "1234");
+        Member seller = new Member("jinung", "0410", "01012341234", "out@look.com", address);
+        item = new Item(seller, "MacBook", 1000000, 10);
     }
 
     @Test

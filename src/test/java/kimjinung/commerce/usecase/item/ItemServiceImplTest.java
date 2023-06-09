@@ -1,7 +1,11 @@
 package kimjinung.commerce.usecase.item;
 
+import kimjinung.commerce.domain.Address;
 import kimjinung.commerce.domain.Item;
+import kimjinung.commerce.domain.Member;
 import kimjinung.commerce.dto.item.*;
+import kimjinung.commerce.dto.member.MemberJoinRequestDto;
+import kimjinung.commerce.usecase.member.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +23,20 @@ class ItemServiceImplTest {
 
     @Autowired
     ItemService service;
+    @Autowired
+    MemberService memberService;
 
     @BeforeEach
     void before() {
-        ItemRegisterRequestDto item = new ItemRegisterRequestDto("myItem", 10, 1);
+        MemberJoinRequestDto memberJoinRequestDto = new MemberJoinRequestDto("jinung", "1234", "01012341234", "out@olookc.om", "city", "street", "1234");
+        memberService.join(memberJoinRequestDto);
+        ItemRegisterRequestDto item = new ItemRegisterRequestDto("jinung", "myItem", 10, 1);
         service.register(item);
     }
 
     @Test
     void testRegister() {
-        ItemRegisterRequestDto item = new ItemRegisterRequestDto("PC", 1010101010, 1);
+        ItemRegisterRequestDto item = new ItemRegisterRequestDto("jinung", "PC", 1010101010, 1);
         ItemRegisterResponseDto registeredItem = service.register(item);
 
         assertThat(registeredItem.getName()).isEqualTo("PC");

@@ -1,7 +1,9 @@
 package kimjinung.commerce.usecase.item;
 
 import kimjinung.commerce.Infrastructure.repository.item.ItemRepository;
+import kimjinung.commerce.Infrastructure.repository.member.MemberRepository;
 import kimjinung.commerce.domain.Item;
+import kimjinung.commerce.domain.Member;
 import kimjinung.commerce.dto.item.*;
 import kimjinung.commerce.exception.*;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +20,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ItemServiceImpl implements ItemService {
-    
+
+    private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
     
     @Override
     public ItemRegisterResponseDto register(ItemRegisterRequestDto itemRegisterRequestDto) throws RuntimeException {
+        String sellerId = itemRegisterRequestDto.getSellerId();
+        Member seller = memberRepository.findByUserId(sellerId).orElseThrow(MemberNotFoundException::new);
 
-        Item item = createItem(itemRegisterRequestDto);
+        Item item = createItem(seller, itemRegisterRequestDto);
         Optional<Item> optionalItem = itemRepository.save(item);
 
         if (optionalItem.isEmpty()) {
@@ -34,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
 
         return new ItemRegisterResponseDto(
                 savedItem.getId().toString(),
+                savedItem.getSeller().getUserId(),
                 savedItem.getName(),
                 savedItem.getPrice(),
                 savedItem.getStockQuantity()
@@ -108,11 +114,11 @@ public class ItemServiceImpl implements ItemService {
         item.changeStockQuantity(itemUpdateRequestDto.getStockQuantity());
     }
 
-    private Item createItem(ItemRegisterRequestDto itemRegisterRequestDto) {
+    private Item createItem(Member seller, ItemRegisterRequestDto itemRegisterRequestDto) {
         String name = itemRegisterRequestDto.getName();
         int price = itemRegisterRequestDto.getPrice();
         int stockQuantity = itemRegisterRequestDto.getStockQuantity();
 
-        return new Item(name, price, stockQuantity);
+        return new Item(seller, name, price, stockQuantity);
     }
 }

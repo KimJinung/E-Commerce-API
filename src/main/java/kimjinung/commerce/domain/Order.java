@@ -34,7 +34,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "uuid")
     private Member member;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = PERSIST)
     private final List<OrderLine> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "order", cascade = PERSIST)
@@ -42,7 +42,6 @@ public class Order extends BaseEntity {
 
     protected Order() {
     }
-
 
     public Order(Member member) {
         this.member = member;

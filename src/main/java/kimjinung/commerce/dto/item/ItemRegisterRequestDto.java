@@ -11,6 +11,9 @@ public class ItemRegisterRequestDto {
     @NotBlank
     private String name;
 
+    @NotBlank
+    private String sellerId;
+
     @Range(min = 100, max = 999999999)
     private int price;
 
@@ -20,7 +23,8 @@ public class ItemRegisterRequestDto {
     protected ItemRegisterRequestDto() {
     }
 
-    public ItemRegisterRequestDto(String name, int price, int stockQuantity) {
+    public ItemRegisterRequestDto(String sellerId, String name, int price, int stockQuantity) {
+        this.sellerId = sellerId;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
