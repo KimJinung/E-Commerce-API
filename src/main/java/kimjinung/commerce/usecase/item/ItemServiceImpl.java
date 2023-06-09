@@ -6,6 +6,7 @@ import kimjinung.commerce.dto.item.*;
 import kimjinung.commerce.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -62,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
         Optional<Item> optionalItem = itemRepository.findById(id);
 
         if (optionalItem.isEmpty()) {
-            throw new ItemNotExistException();
+            throw new ItemNotFoundException();
         }
         Item item = optionalItem.get();
 
@@ -88,7 +90,7 @@ public class ItemServiceImpl implements ItemService {
         Optional<Item> optionalItem = itemRepository.findById(id);
 
         if (optionalItem.isEmpty()) {
-            throw new ItemNotExistException();
+            throw new ItemNotFoundException();
         }
         Item item = optionalItem.get();
         String name = item.getName();

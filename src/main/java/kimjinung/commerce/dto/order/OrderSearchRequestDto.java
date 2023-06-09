@@ -1,9 +1,13 @@
 package kimjinung.commerce.dto.order;
 
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+import javax.validation.constraints.NotBlank;
+
+@Data
 public class OrderSearchRequestDto {
+
+    @NotBlank
     private String userId;
 
     public OrderSearchRequestDto() {

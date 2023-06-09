@@ -1,12 +1,14 @@
 package kimjinung.commerce.dto.item;
 
-import lombok.Getter;
+import lombok.Data;
+import javax.validation.constraints.NotBlank;
 
-@Getter
+@Data
 public class ItemRemoveRequestDto {
+    @NotBlank
     private String id;
 
-    public ItemRemoveRequestDto() {
+    protected ItemRemoveRequestDto() {
     }
 
     public ItemRemoveRequestDto(String id) {

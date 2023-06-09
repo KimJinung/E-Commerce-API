@@ -1,12 +1,18 @@
 package kimjinung.commerce.dto.order;
 
-import lombok.Getter;
+import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.HashMap;
 
-@Getter
+@Data
 public class OrderCreateRequestDto {
+
+    @NotBlank
     private String userId;
+
+    @NotEmpty
     private HashMap<String, Integer> itemCart;
 
     public OrderCreateRequestDto() {

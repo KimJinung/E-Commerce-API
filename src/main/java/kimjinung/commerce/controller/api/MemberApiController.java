@@ -1,5 +1,6 @@
 package kimjinung.commerce.controller.api;
 
+import kimjinung.commerce.dto.common.ResponseDto;
 import kimjinung.commerce.dto.error.ErrorResult;
 import kimjinung.commerce.dto.member.*;
 import kimjinung.commerce.exception.InvalidRequestException;
@@ -22,72 +23,49 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 @RestController
-public class MemberApiController {
+public class MemberApiController extends BaseApiController {
 
-//    private final MemberService memberService;
+    private final MemberService memberService;
 
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    @ExceptionHandler(Exception.class)
-//    public ErrorResult exception(Exception e) {
-//        log.info("[Exception] ", e);
-//        return new ErrorResult("INTERNAL_SERVER_ERROR", e.getMessage());
-//
-//    }
-//
-//    @PostMapping("/join")
-//    public ResponseEntity<MemberJoinResponseDto> join(
-//            @RequestBody @Validated MemberJoinRequestDto memberJoinRequestDto,
-//            BindingResult bindingResult) {
-//
-//        if (bindingResult.hasErrors()) {
-//            List<String> errors = new ArrayList<>();
-//
-//            for (ObjectError error : bindingResult.getAllErrors()) {
-//                errors.add(error.getDefaultMessage());
-//            }
-//
-//            if (bindingResult.hasGlobalErrors()) {
-//                throw new InvalidRequestException(errors.toString());
-//            } else {
-//                throw new MemberJoinInvalidArgumentException(errors.toString());
-//            }
-//        }
-//
-//        return ResponseEntity.ok(memberService.join(memberJoinRequestDto));
-//    }
-//
-//    @PostMapping("/search")
-//    public ResponseEntity<MemberSearchResponseDto> search(
-//            @RequestBody @Validated MemberSearchRequestDto memberSearchRequestDto,
-//            BindingResult bindingResult) {
-//
-//        if (bindingResult.hasErrors()) {
-//
-//        }
-//        return ResponseEntity.ok(memberService.search(memberSearchRequestDto));
-//
-//    }
-//
-//    @PostMapping("/update")
-//    public ResponseEntity<MemberUpdateResponseDto> update(@RequestBody MemberUpdateRequestDto memberUpdateRequestDto) {
-//        try {
-//            return ResponseEntity.ok(memberService.update(memberUpdateRequestDto));
-//        } catch (RuntimeException ex){
-//            MemberUpdateResponseDto result = new MemberUpdateResponseDto(());
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
-//        }
-//    }
-//
-//    @PostMapping("/withdrawal")
-//    public ResponseEntity<MemberWithdrawalResponseDto> withdrawal(
-//            @RequestBody @Validated MemberWithdrawalRequestDto memberWithdrawalRequestDto) {
-//        try {
-//            boolean result = memberService.withdrawal(memberWithdrawalRequestDto);
-//            return ResponseEntity.ok(new MemberWithdrawalResponseDto());
-//        } catch (RuntimeException ex) {
-//            MemberWithdrawalResponseDto errorResult = new MemberWithdrawalResponseDto(false, ex.getMessage());
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResult);
-//        }
-//    }
+    @PostMapping("/join")
+    public ResponseDto<MemberJoinResponseDto> join(
+            @RequestBody @Validated MemberJoinRequestDto memberJoinRequestDto,
+            BindingResult bindingResult
+    ) {
+      validateRequest(bindingResult);
+        MemberJoinResponseDto joinedMember = memberService.join(memberJoinRequestDto);
+        return new ResponseDto<>(200, joinedMember);
+    }
+
+    @GetMapping("/search")
+    public ResponseDto<MemberSearchResponseDto> search(
+            @RequestBody @Validated MemberSearchRequestDto memberSearchRequestDto,
+            BindingResult bindingResult
+    ) {
+        validateRequest(bindingResult);
+        MemberSearchResponseDto searchedMember = memberService.search(memberSearchRequestDto);
+        return new ResponseDto<>(200, searchedMember);
+    }
+
+    @PatchMapping("/update")
+    public ResponseDto<MemberUpdateResponseDto> update(
+            @RequestBody @Validated MemberUpdateRequestDto memberUpdateRequestDto,
+            BindingResult bindingResult
+    ) {
+        validateRequest(bindingResult);
+        MemberUpdateResponseDto updatedMember = memberService.update(memberUpdateRequestDto);
+        return new ResponseDto<>(200, updatedMember);
+    }
+
+    @DeleteMapping("/withdrawal")
+    public ResponseDto<MemberWithdrawalResponseDto> withdrawal(
+            @RequestBody @Validated MemberWithdrawalRequestDto memberWithdrawalRequestDto,
+            BindingResult bindingResult
+    ) {
+        validateRequest(bindingResult);
+        MemberWithdrawalResponseDto withdrawnMember = memberService.withdrawal(memberWithdrawalRequestDto);
+        return new ResponseDto<>(200, withdrawnMember);
+    }
+
 }
 
