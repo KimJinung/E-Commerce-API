@@ -1,10 +1,10 @@
 package kimjinung.commerce.dto.order;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
+@Data
 public class OrderSearchRequestDto {
 
     @NotBlank

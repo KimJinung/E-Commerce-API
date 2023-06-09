@@ -1,11 +1,11 @@
 package kimjinung.commerce.dto.order;
 
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
-@Getter
+@Data
 public class OrderCreateResponseDto {
     private String id;
     private final LocalDateTime orderDate = LocalDateTime.now();

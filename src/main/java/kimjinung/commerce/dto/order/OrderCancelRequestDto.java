@@ -1,10 +1,11 @@
 package kimjinung.commerce.dto.order;
 
+import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
+@Data
 public class OrderCancelRequestDto {
 
     @NotBlank
