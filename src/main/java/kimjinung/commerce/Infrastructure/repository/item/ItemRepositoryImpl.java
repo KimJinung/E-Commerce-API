@@ -1,6 +1,7 @@
 package kimjinung.commerce.Infrastructure.repository.item;
 
 import kimjinung.commerce.domain.Item;
+import kimjinung.commerce.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -42,5 +43,15 @@ public class ItemRepositoryImpl implements ItemRepository {
 
         List<Item> itemList = query.getResultList();
         return Optional.ofNullable(itemList);
+    }
+
+    @Override
+    public Optional<List<Item>> findBySeller(Member member) {
+        String jpql = "SELECT i FROM Item i WHERE i.seller = :seller";
+        TypedQuery<Item> query = em.createQuery(jpql, Item.class)
+                .setParameter("seller", member);
+
+        List<Item> items = query.getResultList();
+        return Optional.ofNullable(items);
     }
 }
