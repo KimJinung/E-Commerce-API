@@ -3,10 +3,7 @@ package kimjinung.commerce.controller.exhandler;
 import kimjinung.commerce.dto.common.ResponseDto;
 import kimjinung.commerce.dto.error.Error;
 import kimjinung.commerce.dto.error.ErrorResult;
-import kimjinung.commerce.exception.InvalidRequestException;
-import kimjinung.commerce.exception.ItemNotFoundException;
-import kimjinung.commerce.exception.ItemRegisterFailException;
-import kimjinung.commerce.exception.MemberNotFoundException;
+import kimjinung.commerce.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +25,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseDto<ErrorResult> invalidRequestException(InvalidRequestException ex) {
         return baseException(400, Error.INVALID_REQUEST, ex);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MemberPasswordMismatchException.class)
+    public ResponseDto<ErrorResult> invalidPasswordException(MemberPasswordMismatchException ex) {
+        return baseException(400, Error.INVALID_PASSWORD, ex);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
