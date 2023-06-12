@@ -19,6 +19,19 @@ public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
 
     @Override
+    public MemberLoginResponseDto login(MemberLoginRequestDto memberLoginRequestDto) {
+        String userId = memberLoginRequestDto.getUserId();
+        String password = memberLoginRequestDto.getPassword();
+
+        Member member = memberRepository.findByUserId(userId).orElseThrow(MemberNotFoundException::new);
+
+        if (!member.getPassword().equals(password)) {
+            throw new MemberPasswordMismatchException();
+        }
+        return new MemberLoginResponseDto(true);
+    }
+
+    @Override
     public MemberJoinResponseDto join(MemberJoinRequestDto memberJoinRequestDto) throws RuntimeException {
 
         String requestUserId = memberJoinRequestDto.getUserId();

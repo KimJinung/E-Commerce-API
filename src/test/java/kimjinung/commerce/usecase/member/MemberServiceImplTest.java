@@ -1,6 +1,7 @@
 package kimjinung.commerce.usecase.member;
 
 import kimjinung.commerce.dto.member.*;
+import kimjinung.commerce.exception.MemberPasswordMismatchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @Transactional
@@ -33,6 +35,24 @@ class MemberServiceImplTest {
 
         service.join(memberJoinRequestDto);
     }
+
+    @Test
+    void testLogin() {
+        MemberLoginRequestDto requestDto = new MemberLoginRequestDto("kimjinung", "1234");
+        MemberLoginResponseDto responseDto = service.login(requestDto);
+
+        assertThat(responseDto.isOk()).isTrue();
+    }
+
+    @Test
+    void testLogin_InvalidPassword() {
+        MemberLoginRequestDto requestDto = new MemberLoginRequestDto("kimjinung", "4321");
+
+        assertThrows(MemberPasswordMismatchException.class,
+                () -> service.login(requestDto)
+        );
+    }
+
     @Test
     void testJoin() {
         MemberJoinRequestDto joinDto = new MemberJoinRequestDto(

@@ -27,6 +27,16 @@ public class MemberApiController extends BaseApiController {
 
     private final MemberService memberService;
 
+    @GetMapping("/login")
+    public ResponseDto<MemberLoginResponseDto> login(
+            @RequestBody @Validated MemberLoginRequestDto memberLoginRequestDto,
+            BindingResult bindingResult
+    ) {
+        validateRequest(bindingResult);
+        MemberLoginResponseDto login = memberService.login(memberLoginRequestDto);
+        return new ResponseDto<>(200, login);
+    }
+
     @PostMapping("/join")
     public ResponseDto<MemberJoinResponseDto> join(
             @RequestBody @Validated MemberJoinRequestDto memberJoinRequestDto,
