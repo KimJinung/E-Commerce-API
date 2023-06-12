@@ -26,6 +26,19 @@ class MemberApiControllerTest {
     private MemberService memberService;
 
     @Test
+    void testLogin() throws Exception {
+        MemberLoginRequestDto requestDto = new MemberLoginRequestDto("jinung", "1234");
+        MemberLoginResponseDto responseDto = new MemberLoginResponseDto(true);
+        given(memberService.login(requestDto)).willReturn(responseDto);
+
+        mockMvc.perform(get("/api/member/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(requestDto))
+        ).andExpect(status().is(200)
+        ).andExpect(jsonPath("$.response.ok").exists());
+    }
+
+    @Test
     void testJoin() throws Exception{
         MemberJoinRequestDto requestDto = new MemberJoinRequestDto("test", "0410", "01012341234",
                 "look@outlook.com,", "Seoul", "street", "1234");
